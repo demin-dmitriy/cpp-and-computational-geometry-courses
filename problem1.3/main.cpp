@@ -24,10 +24,8 @@ int main()
 	
 	long a, b, c;
 
-	while(!file_in.eof())
-	{
-		file_in >> a >> b >> c;
-		
+	while(file_in >> a >> b >> c)
+	{	
 		if (a == 0 && b == 0) 
 		{
 			if (c == 0)
