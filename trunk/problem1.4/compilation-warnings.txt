@@ -1,0 +1,4 @@
+x:\evaluator\export\problem1.4\big_int.cpp(161): warning C4244: '=' : conversion from '__int64' to 'ptype', possible loss of data [X:\evaluator\export\problem1.4\problem1.4.vcxproj]
+
+[Generated at May 15, 2011 9:32:40 PM GMT+03:00]
+
