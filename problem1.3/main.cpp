@@ -2,7 +2,7 @@
 #include "main.h"
 
 // http://www.e-maxx.ru/algo/extended_euclid_algorithm
-int gcd(int a, int b, int& x, int& y)
+long long gcd(long long a, long long b, long long& x, long long& y)
 {
 	if (a == 0)
 	{
@@ -10,8 +10,8 @@ int gcd(int a, int b, int& x, int& y)
 		y = 1;
 		return b;
 	}
-	int x1, y1;
-	int d = gcd(b % a, a, x1, y1);
+	long long x1, y1;
+	long long d = gcd(b % a, a, x1, y1);
 	x = y1 - (b / a) * x1;
 	y = x1;
 	return d;
@@ -43,8 +43,8 @@ int main()
 		}
 		else 
 		{
-			int x, y;
-			int d = gcd(a, b, x, y);
+			long long x, y;
+			long long d = gcd(a, b, x, y);
 			if (c % d == 0)
 			{
 				file_out << x * (c / d) << ' ' << y * (c / d);
