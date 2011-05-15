@@ -24,17 +24,21 @@ int main()
 	
 	long a, b, c;
 
+	bool not_first = false;
 	while(file_in >> a >> b >> c)
 	{	
+		if (not_first) file_out << '\n';
+		not_first = true;
+
 		if (a == 0 && b == 0) 
 		{
 			if (c == 0)
 			{
-				file_out << "0 0\n";
+				file_out << "0 0";
 			}
 			else
 			{
-				file_out << "<none>\n";
+				file_out << "<none>";
 			}			
 		}
 		else 
@@ -43,11 +47,11 @@ int main()
 			int d = gcd(a, b, x, y);
 			if (c % d == 0)
 			{
-				file_out << x * (c / d) << ' ' << y * (c / d) << '\n';
+				file_out << x * (c / d) << ' ' << y * (c / d);
 			}
 			else
 			{
-				file_out << "<none>\n";
+				file_out << "<none>";
 			}
 		}
 	}
