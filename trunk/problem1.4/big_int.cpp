@@ -158,7 +158,7 @@ const big_int& big_int::operator*= (const big_int& x)
 		{
 			long long long_tmp = (unsigned long long(this->digits_[k])) * (unsigned long long(x.digits_[i])) + carry;
 			tmp.digits_[i + k] = long_tmp % base;
-			carry = long_tmp / base;	
+			carry = ptype(long_tmp / base);	
 		}
 		tmp.digits_[i + this_size] = carry;
 		tmp.delete_lead_zero();
