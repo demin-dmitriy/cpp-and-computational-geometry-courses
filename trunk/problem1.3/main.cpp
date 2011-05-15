@@ -22,7 +22,7 @@ int main()
 	std::ifstream file_in("in.txt");
 	std::ofstream file_out("out.txt");
 	
-	long a, b, c;
+	long long a, b, c;
 
 	bool not_first = false;
 	while(file_in >> a >> b >> c)
