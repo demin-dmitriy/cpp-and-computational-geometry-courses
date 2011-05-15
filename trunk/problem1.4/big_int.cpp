@@ -156,7 +156,7 @@ const big_int& big_int::operator*= (const big_int& x)
 		ptype carry = 0; //перенос
 		for (size_t k = 0; k < this_size; ++k)
 		{
-			long long long_tmp = (long long(this->digits_[k])) * (long long(x.digits_[i])) + carry;
+			long long long_tmp = (unsigned long long(this->digits_[k])) * (unsigned long long(x.digits_[i])) + carry;
 			tmp.digits_[i + k] = long_tmp % base;
 			carry = long_tmp / base;	
 		}
