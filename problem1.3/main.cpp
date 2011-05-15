@@ -30,7 +30,7 @@ int main()
 		{
 			if (c == 0)
 			{
-				file_out << "0  0\n";
+				file_out << "0 0\n";
 			}
 			else
 			{
