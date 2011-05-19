@@ -42,9 +42,9 @@ std::ostream& operator<< (std::ostream& stream, const big_int& target)
 	char tmp_f = stream.fill();
 	stream << target.digits_[target.digits_.size() - 1];
 	stream.fill('0');
-	stream.width(base_amount);
 	for (size_t i = target.digits_.size() - 2; i != -1; --i)
 	{
+		stream.width(base_amount);
 		stream << target.digits_[i];
 	}
 	stream.width(tmp_s);
