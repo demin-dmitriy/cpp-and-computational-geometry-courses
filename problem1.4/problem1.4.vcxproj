@@ -9,6 +9,10 @@
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="unit_test|Win32">
+      <Configuration>unit_test</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{96EDDAC4-1BF0-4172-8585-2E7BBEFC3819}</ProjectGuid>
@@ -66,6 +70,7 @@
   <ItemGroup>
     <ClInclude Include="big_int.h" />
     <ClInclude Include="main.h" />
+    <ClInclude Include="timer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="in.txt" />

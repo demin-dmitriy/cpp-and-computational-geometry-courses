@@ -1,5 +1,5 @@
 //taskC
-#include "main.h"
+#include <fstream>
 
 // http://www.e-maxx.ru/algo/extended_euclid_algorithm
 long long gcd(long long a, long long b, long long& x, long long& y)
@@ -24,12 +24,8 @@ int main()
 	
 	long long a, b, c;
 
-	bool not_first = false;
 	while(file_in >> a >> b >> c)
 	{	
-		if (not_first) file_out << '\n';
-		not_first = true;
-
 		if (a == 0 && b == 0) 
 		{
 			if (c == 0)
@@ -54,6 +50,7 @@ int main()
 				file_out << "<none>";
 			}
 		}
+		file_out << '\n';
 	}
 	return 0;
 }

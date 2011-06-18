@@ -117,7 +117,7 @@ const big_int& big_int::operator+= (const big_int &x)
 			this->negative_ = x.negative_;
 		}
 		size_t larger_size  = larger->digits_.size();
-		size_t smaller_size = smaller->digits_.size();
+		size_t smaller_size = smaller->digits_.size();//???????
 
 		for (size_t i =	0; i < larger_size; ++i)
 		{
@@ -146,6 +146,7 @@ const big_int& big_int::operator-= (const big_int& x)
 
 const big_int& big_int::operator*= (const big_int& x)
 {
+	//timer_t timer;
 	big_int result = 0;
 	size_t this_size = this->digits_.size();
 	size_t x_size = x.digits_.size();
@@ -163,8 +164,8 @@ const big_int& big_int::operator*= (const big_int& x)
 			carry = static_cast<ptype>(long_tmp / base);	
 		}
 		tmp.digits_[i + this_size] = carry;
-		tmp.delete_lead_zero();
-		result += tmp;
+		tmp.delete_leading_zeros();
+		//result += tmp;
 	}
 	*this = result;
 	return *this;
@@ -172,13 +173,15 @@ const big_int& big_int::operator*= (const big_int& x)
 
 void devide_helper(const big_int& x, const big_int& y, big_int& result, big_int& rest)
 {
+//	timer_t timer;
 	size_t this_size = x.digits_.size();
 	result = 0;
 	rest = 0;
 	for (size_t i = this_size - 1; i != -1; --i)
 	{
-		rest *= base;
-		rest += x.digits_[i];
+		//rest.digits_.push_back(x.digits_[i]);
+		//rest *= base;
+		//rest += x.digits_[i];
 		//bin-search for appropriate factor
 		ptype a = 0, b = base, c;
 		while (a + 1 < b)
@@ -188,12 +191,12 @@ void devide_helper(const big_int& x, const big_int& y, big_int& result, big_int&
 			else a = c;
 		}
 		rest -= a * y;
-		result *= base;
+		//result *= base;
 		result += a;
 	}
 	result.negative_  = x.negative_ ^ y.negative_;
-	result.delete_lead_zero();
-	rest.delete_lead_zero();
+	result.delete_leading_zeros();
+	rest.delete_leading_zeros();
 }
 
 const big_int& big_int::operator/= (const big_int &x)
@@ -253,7 +256,7 @@ big_int::big_int (const ptype &x)
 	this->negative_ = (x < 0);
 }
 
-void big_int::delete_lead_zero()
+void big_int::delete_leading_zeros()
 {
 	for (size_t i = this->digits_.size() - 1; i != 0; --i)
 	{

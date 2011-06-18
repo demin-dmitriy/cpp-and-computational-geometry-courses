@@ -20,11 +20,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="main.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="in.txt" />
     <None Include="out.txt" />
   </ItemGroup>
