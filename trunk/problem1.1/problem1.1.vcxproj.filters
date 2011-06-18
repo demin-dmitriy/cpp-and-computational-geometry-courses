@@ -24,7 +24,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="main.h">
+    <ClInclude Include="cordinate.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,5 +1,6 @@
 //task 1.1
-#include "main.h"
+#include "cordinate.h"
+#include <fstream>
 
 int main()
 {
@@ -17,12 +18,9 @@ int main()
 		pos.x += direction.x;
 		pos.y += direction.y;
 
-		long tmp;
-		tmp = direction.x;
-		direction.x = direction.y;
-		direction.y = tmp;
-		
-		if ( direction.y == 0) //only in this case radius increase
+		std::swap<long>(direction.x, direction.y);
+
+		if (direction.y == 0) //only in this case radius increase
 		{
 			direction.x += (direction.x > 0) ? (+1) : (-1);
 			direction.x = -direction.x;

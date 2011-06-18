@@ -7,8 +7,8 @@
 #include <ostream>
 
 typedef unsigned long ptype;
-const ptype base = 1000000000;			//10^9 - основание системы счисления
-const unsigned int base_amount = 9;		//log10(base)
+const ptype base = 1000000000;      //10^9 - radix
+const unsigned int base_amount = 9; //log10(base)
 
 using std::string;
 
@@ -28,9 +28,9 @@ public:
 	friend std::istream& operator>> (std::istream&, big_int&);
 	friend std::ostream& operator<< (std::ostream&, const big_int&);
 private:
-	void delete_lead_zero();
+	void delete_leading_zeros();
 	friend void devide_helper(const big_int& x, const big_int& y, big_int& result, big_int& rest);
-	std::vector<ptype> digits_;    // digits here are in reverse order 
+	std::vector<ptype> digits_; // digits here are in reverse order 
 	bool negative_;
 };
 
