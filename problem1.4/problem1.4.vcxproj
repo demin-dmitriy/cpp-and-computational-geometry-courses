@@ -70,7 +70,6 @@
   <ItemGroup>
     <ClInclude Include="big_int.h" />
     <ClInclude Include="main.h" />
-    <ClInclude Include="timer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="in.txt" />
