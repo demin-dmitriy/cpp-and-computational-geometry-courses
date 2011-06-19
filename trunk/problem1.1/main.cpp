@@ -12,7 +12,7 @@ int main()
 
 	long N;
 	file_in >> N;
-	for(long i = 0; i < N; ++i)
+	for (long i = 0; i < N; ++i)
 	{
 		file_out << pos << '\n';
 		pos.x += direction.x;
