@@ -5,7 +5,7 @@ const big_int abs(big_int x){
 	return x;
 }
 
-std::istream& operator>> (std::istream& stream, big_int& target)
+std::istream& operator>>(std::istream& stream, big_int& target)
 {
 	std::string str;
 	stream >> str;
@@ -13,16 +13,16 @@ std::istream& operator>> (std::istream& stream, big_int& target)
 	size_t length = str.size();
 
 	char buf[base_amount];
-	while(length >= base_amount)			
+	while (length >= base_amount)			
 	{
 		length -= base_amount;
-		for(size_t i = 0; i != base_amount; ++i)
+		for (size_t i = 0; i != base_amount; ++i)
 		{
 			buf[i] = str[length + i]; 
 		}
 		target.digits_.push_back(atol(buf));
 	}
-	for(size_t i = 0; i != length; ++i)	//rest of number
+	for (size_t i = 0; i != length; ++i) //rest of number
 	{
 		buf[i] = str[i]; 
 	}
@@ -32,7 +32,7 @@ std::istream& operator>> (std::istream& stream, big_int& target)
 	return stream;
 }
 
-std::ostream& operator<< (std::ostream& stream, const big_int& target)
+std::ostream& operator<<(std::ostream& stream, const big_int& target)
 {
 	if (target.negative_)
 	{
@@ -52,7 +52,7 @@ std::ostream& operator<< (std::ostream& stream, const big_int& target)
 	return stream;
 }
 
-inline const ptype safe_subtract(const ptype a, const ptype b, bool& carry) //safe for unsigned type
+inline const ptype safe_subtract(const ptype a, const ptype b, bool& carry)
 {
 	if (a >= b)
 	{
@@ -66,7 +66,7 @@ inline const ptype safe_subtract(const ptype a, const ptype b, bool& carry) //sa
 	}
 }
 
-inline const ptype safe_sum(const ptype a, const ptype b, bool& carry) //safe for overflow
+inline const ptype safe_sum(const ptype a, const ptype b, bool& carry) 
 {
 	if (a < base - b)
 	{
@@ -80,12 +80,12 @@ inline const ptype safe_sum(const ptype a, const ptype b, bool& carry) //safe fo
 	}
 }
 
-const big_int& big_int::operator+= (const big_int &x)
+const big_int& big_int::operator+=(const big_int &x)
 {
 	size_t x_size = x.digits_.size();
 	size_t this_size = this->digits_.size();
 		
-	bool carry = false; //перенос в следующий разряд
+	bool carry = false; //dot and carry one
 	if (x.negative_ == this->negative_)
 	{
 		for (size_t i =	0; carry || i < x_size; ++i)
@@ -117,7 +117,7 @@ const big_int& big_int::operator+= (const big_int &x)
 			this->negative_ = x.negative_;
 		}
 		size_t larger_size  = larger->digits_.size();
-		size_t smaller_size = smaller->digits_.size();//???????
+		size_t smaller_size = smaller->digits_.size();
 
 		for (size_t i =	0; i < larger_size; ++i)
 		{
@@ -136,7 +136,7 @@ const big_int& big_int::operator+= (const big_int &x)
 	return *this;
 }
 
-const big_int& big_int::operator-= (const big_int& x)
+const big_int& big_int::operator-=(const big_int& x)
 {
 	this->negative_ = !this->negative_;
 	*this += x;
@@ -144,9 +144,8 @@ const big_int& big_int::operator-= (const big_int& x)
 	return *this;
 }
 
-const big_int& big_int::operator*= (const big_int& x)
+const big_int& big_int::operator*=(const big_int& x)
 {
-	//timer_t timer;
 	big_int result = 0;
 	size_t this_size = this->digits_.size();
 	size_t x_size = x.digits_.size();
@@ -154,7 +153,7 @@ const big_int& big_int::operator*= (const big_int& x)
 	{
 		big_int tmp;
 		tmp.digits_.assign(this_size + i + 1, 0);
-		ptype carry = 0; //перенос
+		ptype carry = 0; //dot and carry one
 		for (size_t k = 0; k < this_size; ++k)
 		{
 			long long long_tmp = static_cast<unsigned long long>(this->digits_[k]) * 
@@ -165,57 +164,56 @@ const big_int& big_int::operator*= (const big_int& x)
 		}
 		tmp.digits_[i + this_size] = carry;
 		tmp.delete_leading_zeros();
-		//result += tmp;
+		result += tmp;
 	}
 	*this = result;
 	return *this;
 }
-
-void devide_helper(const big_int& x, const big_int& y, big_int& result, big_int& rest)
+std::pair<big_int, big_int> divmod(const big_int& x, const big_int& y)
 {
-//	timer_t timer;
-	size_t this_size = x.digits_.size();
-	result = 0;
-	rest = 0;
-	for (size_t i = this_size - 1; i != -1; --i)
+	big_int result = 0;
+	big_int rest = 0;
+
+	for (size_t i = x.digits_.size() - 1; i != -1; --i)
 	{
-		//rest.digits_.push_back(x.digits_[i]);
-		//rest *= base;
-		//rest += x.digits_[i];
-		//bin-search for appropriate factor
-		ptype a = 0, b = base, c;
-		while (a + 1 < b)
+		rest *= base;
+		rest += x.digits_[i];
+		if (rest >= y)
 		{
-			c = a + (b - a) / 2;
-			if (rest < c * y) b = c;
-			else a = c;
+			//Bin-search for appropriate factor
+			ptype a = 0, b = base, c;
+			while (a + 1 < b)
+			{
+				c = a + (b - a) / 2;
+				if (rest < c * y) b = c;
+				else a = c;
+			}
+			rest -= a * y;
+			result.digits_.push_back(a);
 		}
-		rest -= a * y;
-		//result *= base;
-		result += a;
+		else //Very common situation. At previous case will still work correct but slowly.
+		{
+			result.digits_.push_back(0);
+		}
 	}
-	result.negative_  = x.negative_ ^ y.negative_;
+	reverse(result.digits_.begin(), result.digits_.end());
+	result.negative_ = x.negative_ ^ y.negative_;
 	result.delete_leading_zeros();
 	rest.delete_leading_zeros();
+	return std::make_pair<big_int, big_int>(result, rest);
 }
 
-const big_int& big_int::operator/= (const big_int &x)
+const big_int& big_int::operator/=(const big_int &x)
 {
-	big_int result;
-	big_int rest;
-	devide_helper(*this, x, result, rest);
-	return *this = result;
+	return *this = divmod(*this, x).first;
 }
 
-const big_int& big_int::operator%= (const big_int &x)
+const big_int& big_int::operator%=(const big_int &x)
 {
-	big_int result;
-	big_int rest;
-	devide_helper(*this, x, result, rest);
-	return *this = rest;
+	return *this = divmod(*this, x).second;
 }
 
-bool const big_int::operator< (const big_int &x) const
+bool const big_int::operator<(const big_int &x) const
 {
 	size_t this_size = this->digits_.size();
 	size_t x_size = x.digits_.size();
@@ -244,7 +242,8 @@ bool const big_int::operator< (const big_int &x) const
 	return false;
 }
 
-big_int::big_int (const ptype &x)
+big_int::big_int(const ptype &x):
+	negative_(x < 0)
 {
 	ptype t = x;
 	while (t > base)
@@ -253,7 +252,6 @@ big_int::big_int (const ptype &x)
 		t /= base;
 	} 
 	this->digits_.push_back(t);
-	this->negative_ = (x < 0);
 }
 
 void big_int::delete_leading_zeros()
@@ -272,37 +270,37 @@ void big_int::delete_leading_zeros()
 	if (this->digits_[0] == 0) this->negative_ = false;
 }
 
-const big_int operator+ (const big_int &x, const big_int &y)
+const big_int operator+(const big_int &x, const big_int &y)
 {
 	big_int tmp = x;
 	return tmp += y;
 }
 
-const big_int operator- (const big_int &x, const big_int &y)
+const big_int operator-(const big_int &x, const big_int &y)
 {
 	big_int tmp = x;
 	return tmp -= y;
 }
 
-const big_int operator* (const big_int &x, const big_int &y)
+const big_int operator*(const big_int &x, const big_int &y)
 {
 	big_int tmp = x;
 	return tmp *= y;
 }
 
-const big_int operator/ (const big_int &x, const big_int &y)
+const big_int operator/(const big_int &x, const big_int &y)
 {
 	big_int tmp = x;
 	return tmp /= y;
 }
 
-const big_int operator% (const big_int &x, const big_int &y)
+const big_int operator%(const big_int &x, const big_int &y)
 {
 	big_int tmp = x;
 	return tmp %= y;
 }
 
-const bool operator> (const big_int &x, const big_int &y)
+const bool operator>(const big_int &x, const big_int &y)
 {
 	return (y < x);
 }
