@@ -26,9 +26,12 @@ std::istream& operator>>(std::istream& stream, big_int& target)
 	{
 		buf[i] = str[i]; 
 	}
-	buf[length] = '\0';
-	target.digits_.push_back(atol(buf));
 
+	if (length != 0)
+	{
+		buf[length] = '\0';
+		target.digits_.push_back(atol(buf));
+	}
 	return stream;
 }
 
