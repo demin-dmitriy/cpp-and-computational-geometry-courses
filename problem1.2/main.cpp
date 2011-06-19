@@ -13,7 +13,7 @@ int main()
 	file_in >> x_old >> y_old;
 	double x_first = x_old, y_first = y_old;
 
-	while(file_in >> x_new >> y_new)
+	while (file_in >> x_new >> y_new)
 	{
 		area += (x_new - x_old) * (y_new + y_old) / 2;
 		x_old = x_new;
