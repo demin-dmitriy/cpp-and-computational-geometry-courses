@@ -20,10 +20,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="big_int.h" />
+    <ClInclude Include="num_vector.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="big_int.cpp" />
-    <ClCompile Include="big_int_test.cpp" />
+    <ClCompile Include="big_int_test.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Boost_Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="num_vector.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A3E8C8CD-97C5-4FC9-9265-B27BFF6CDAF3}</ProjectGuid>

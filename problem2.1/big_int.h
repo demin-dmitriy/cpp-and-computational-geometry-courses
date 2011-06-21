@@ -7,8 +7,9 @@
 #include <ostream>
 #include <algorithm>
 
-typedef unsigned long ptype;
-const ptype base = 1000000000;      //10^9 - radix
+#include "num_vector.h"
+
+const ptype base = 1000000000; //10^9 - radix
 const unsigned int base_amount = 9; //log10(base)
 
 struct big_int
@@ -34,8 +35,8 @@ public:
 	friend std::ostream& operator<<(std::ostream&, const big_int&);
 protected:
 	void delete_leading_zeros();
-	std::vector<ptype> digits_; // digits here are in reverse order 
-	bool negative_;
+	num_vector digits_; // digits here are in reverse order 
+	bool negative_; //zero always positive (negative_ == false)
 };
 
 big_int operator+(const big_int&, const big_int&);
