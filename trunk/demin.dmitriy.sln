@@ -15,6 +15,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "problem1.1", "problem1.1\pr
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "problem4.1", "problem4.1\problem4.1.vcxproj", "{5ED7513E-FA77-44C4-815F-29B1E7B4C11F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "problem4.2", "problem4.2\problem4.2.vcxproj", "{C30397EC-8FAA-4339-A83C-5A36AC128858}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Boost_Debug|Win32 = Boost_Debug|Win32
@@ -79,6 +81,14 @@ Global
 		{5ED7513E-FA77-44C4-815F-29B1E7B4C11F}.Debug|Win32.Build.0 = Debug|Win32
 		{5ED7513E-FA77-44C4-815F-29B1E7B4C11F}.Release|Win32.ActiveCfg = Release|Win32
 		{5ED7513E-FA77-44C4-815F-29B1E7B4C11F}.Release|Win32.Build.0 = Release|Win32
+		{C30397EC-8FAA-4339-A83C-5A36AC128858}.Boost_Debug|Win32.ActiveCfg = Debug|Win32
+		{C30397EC-8FAA-4339-A83C-5A36AC128858}.Boost_Debug|Win32.Build.0 = Debug|Win32
+		{C30397EC-8FAA-4339-A83C-5A36AC128858}.Boost_Release|Win32.ActiveCfg = Release|Win32
+		{C30397EC-8FAA-4339-A83C-5A36AC128858}.Boost_Release|Win32.Build.0 = Release|Win32
+		{C30397EC-8FAA-4339-A83C-5A36AC128858}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C30397EC-8FAA-4339-A83C-5A36AC128858}.Debug|Win32.Build.0 = Debug|Win32
+		{C30397EC-8FAA-4339-A83C-5A36AC128858}.Release|Win32.ActiveCfg = Release|Win32
+		{C30397EC-8FAA-4339-A83C-5A36AC128858}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
