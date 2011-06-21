@@ -92,7 +92,12 @@ big_int count_exp(const std::string& expression, size_t& pos)
 big_int count_token(const std::string& expression, size_t& pos)
 {
 	char tmp = expression[pos];
-	if (isdigit(tmp) || tmp == '-') //there is a number
+	if (tmp == '-')
+	{
+		++pos;
+		return -1 * count_token(expression, pos);
+	}
+	else if (isdigit(tmp)) //there is a number
 	{
 		std::stringstream str;
 		str << tmp;
@@ -133,7 +138,7 @@ big_int count_token(const std::string& expression, size_t& pos)
 		}
 		else
 		{
-			throw std::runtime_error("Unexpected symbol at " + pos);
+			throw std::runtime_error("Unexpected symbol");
 		}
 	}
 	else
