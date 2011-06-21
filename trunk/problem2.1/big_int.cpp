@@ -250,7 +250,7 @@ std::pair<big_int, big_int> divmod(const big_int& x, const big_int& y)
 			result.digits_.push_back(0);
 		}
 	}
-	reverse(result.digits_.begin(), result.digits_.end());
+	result.digits_.reverse();
 	result.negative_ = x.negative_ ^ y.negative_;
 	rest.negative_ = x.negative_;
 	result.delete_leading_zeros();
@@ -418,5 +418,5 @@ const bool operator!=(const big_int& x, const big_int& y)
 void big_int::swap(big_int& x)
 {
 	std::swap(this->negative_, x.negative_);
-	std::swap<std::vector<ptype>>(digits_, x.digits_);
+	digits_.swap(x.digits_);
 }
