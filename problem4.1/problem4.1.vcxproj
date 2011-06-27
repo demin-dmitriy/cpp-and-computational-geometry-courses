@@ -92,6 +92,12 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="meta_ctassert.h" />
+    <ClInclude Include="meta_check.h" />
+    <ClInclude Include="meta_list.h" />
+    <ClInclude Include="meta_big_int.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
