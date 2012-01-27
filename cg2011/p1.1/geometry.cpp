@@ -28,9 +28,9 @@ int robust_turn(point const a1, point const a2, point const b)
 
 int fast_turn(point const a1, point const a2, point const b, int& is_reliable)
 {
-	double t1 = (a2.x - a1.x) * (b.y - a1.y);
-	double t2 = (a2.y - a1.y) * (b.x - a1.x);
-	if (abs(t1 - t2) > 4 * DBL_EPSILON * (abs(t1) + abs(t2)))
+	long double t1 = (static_cast<long double>(a2.x) - static_cast<long double>(a1.x)) * (static_cast<long double>(b.y) - static_cast<long double>(a1.y));
+	long double t2 = (static_cast<long double>(a2.y) - static_cast<long double>(a1.y)) * (static_cast<long double>(b.x) - static_cast<long double>(a1.x));
+	if (abs(t1 - t2) > 4 * LDBL_EPSILON * (abs(t1) + abs(t2)))
 	{
 		return (t1 - t2 > 0) ? 1 : -1;
 	}
