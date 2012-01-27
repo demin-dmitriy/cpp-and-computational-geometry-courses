@@ -1,7 +1,9 @@
 #include "geometry.h"
 #include <algorithm>
+#include <math.h>
+#include <cfloat>
 
-int turn(point const& a1, point const& a2, point const& b)
+int robust_turn(point const a1, point const a2, point const b)
 {
 	// a2.x * b.y - a2.x * a1.y - a1.x * b.y - a2.y * b.x + a2.y * a1.x + a1.y * b.x
 	using namespace adaptive_arithmetic;
@@ -24,6 +26,18 @@ int turn(point const& a1, point const& a2, point const& b)
 	return sign<12>(result);
 }
 
+int fast_turn(point const a1, point const a2, point const b, int& is_reliable)
+{
+	double t1 = (a2.x - a1.x) * (b.y - a1.y);
+	double t2 = (a2.y - a1.y) * (b.x - a1.x);
+	if (abs(t1 - t2) > 4 * DBL_EPSILON * (abs(t1) + abs(t2)))
+	{
+		++is_reliable;
+		return t1 - t2;
+	}
+	return 0; //not reliable
+}
+
 bool check_bounding_box(point const a1, point const a2, point const b1, point const b2)
 {
 	using namespace std;
@@ -43,10 +57,18 @@ bool check_bounding_box(point const a1, point const a2, point const b1, point co
 
 bool is_intersect(point const a1, point const a2, point const b1, point const b2)
 {
-	// unfinished. there need to be checked AABB and special situations when turn == 0
 	if (check_bounding_box(a1, a2, b1, b2))
 	{
-		if (turn(a1, a2, b1) * turn(a1, a2, b2) <= 0 && turn(b1, b2, a1) * turn(b1, b2, a2) <= 0)
+		int reliable = 0;
+		if (fast_turn(a1, a2, b1, reliable) * fast_turn(a1, a2, b2, reliable) <= 0 && fast_turn(b1, b2, a1, reliable) * fast_turn(b1, b2, a2, reliable) <= 0)
+		{
+			if (reliable == 4)
+			{
+				return true;
+			}
+		}
+
+		if (robust_turn(a1, a2, b1) * robust_turn(a1, a2, b2) <= 0 && robust_turn(b1, b2, a1) * robust_turn(b1, b2, a2) <= 0)
 		{
 			return true;
 		}

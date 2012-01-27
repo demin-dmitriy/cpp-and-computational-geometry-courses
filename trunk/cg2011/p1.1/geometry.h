@@ -1,4 +1,4 @@
-#include "arithmetic.h"
+#include "robust_arithmetic.h"
 struct point
 {
 	double x;
@@ -9,5 +9,5 @@ struct point
 	{}
 };
 
-int turn(point const& a1, point const& a2, point const& b);
+int robust_turn(point const a1, point const a2, point const b);
 bool is_intersect(point const a1, point const a2, point const b1, point const b2);
