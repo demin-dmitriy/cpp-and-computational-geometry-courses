@@ -1,4 +1,5 @@
 #include "geometry.h"
+#include <algorithm>
 
 int turn(point const& a1, point const& a2, point const& b)
 {
@@ -23,13 +24,10 @@ int turn(point const& a1, point const& a2, point const& b)
 	return sign<12>(result);
 }
 
-bool check_bounding_interval(double const a1, double const a2, double const b1, double const b2)
-{
-	return ((a1 < b1 && b1 < a2) || (a1 < b2 && b2 < a2) || (b1 < a1 && a1 < b2) );
-}
-
 bool check_bounding_box(point const a1, point const a2, point const b1, point const b2)
 {
+	using namespace std;
+
 	double const min_x1 = min(a1.x, a2.x);
 	double const min_y1 = min(a1.y, a2.y);
 	double const min_x2 = min(b1.x, b2.x);
@@ -40,7 +38,7 @@ bool check_bounding_box(point const a1, point const a2, point const b1, point co
 	double const max_x2 = max(b1.x, b2.x);
 	double const max_y2 = max(b1.y, b2.y);
 
-	return !((max_x2 < min_x1) || (max_x1 < min_x2)) && !((max_y2 < min_y1) || (max_y1 < min_y2))
+	return !((max_x2 < min_x1) || (max_x1 < min_x2)) && !((max_y2 < min_y1) || (max_y1 < min_y2));
 }
 
 bool is_intersect(point const a1, point const a2, point const b1, point const b2)
