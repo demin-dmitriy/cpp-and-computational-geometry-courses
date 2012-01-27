@@ -32,10 +32,10 @@ int fast_turn(point const a1, point const a2, point const b, int& is_reliable)
 	double t2 = (a2.y - a1.y) * (b.x - a1.x);
 	if (abs(t1 - t2) > 4 * DBL_EPSILON * (abs(t1) + abs(t2)))
 	{
-		++is_reliable;
-		return t1 - t2;
+		return (t1 - t2 > 0) ? 1 : -1;
 	}
-	return 0; //not reliable
+	--is_reliable;
+	return 0; 
 }
 
 bool check_bounding_box(point const a1, point const a2, point const b1, point const b2)
@@ -62,14 +62,14 @@ bool is_intersect(point const a1, point const a2, point const b1, point const b2
 		int reliable = 0;
 		if (fast_turn(a1, a2, b1, reliable) * fast_turn(a1, a2, b2, reliable) <= 0 && fast_turn(b1, b2, a1, reliable) * fast_turn(b1, b2, a2, reliable) <= 0)
 		{
-			if (reliable == 4)
+			if (reliable == 0)
 			{
 				return true;
 			}
 		}
 		else
 		{
-			if (reliable == 4)
+			if (reliable == 0)
 			{
 				return false;
 			}
