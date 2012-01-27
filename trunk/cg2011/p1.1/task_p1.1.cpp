@@ -1,27 +1,17 @@
 #include <iostream>
-#include <fstream>
-#include <memory>
 #include "geometry.h"
 
 using namespace std;
 
-struct TestInput 
-{
-   virtual int get_int() = 0;
-   virtual double get_double() = 0;
-   virtual ~TestInput() {};
-};
-
-class RandomInput: public TestInput
-{
+class random_generator{
    int seed;
 
    static const int a = 1664525;
    static const int c = 1013904223;
 public:
-   RandomInput(int seed) 
+   random_generator(int seed) 
       :seed(seed)
-   { }
+   {}
 
    // return random integer in range 0 .. 2^31-1 
    int get_int() 
@@ -38,53 +28,46 @@ public:
    }
 };
 
-class StandardInput: public TestInput
-{
-public:
-   int get_int() 
-   {
-      int res;
-      cin >> res;
-      return res;
-   }
-
-   double get_double() 
-   {
-      double res;
-      cin >> res;
-      return res;
-   }
-};
-
 int main(int argc, char ** argv)
 {   
-   auto_ptr<TestInput> in(new StandardInput());
-   int n = in->get_int();
+	int n, type;
+	
+	cin >> n >> type;
+	int res = 0;
+	int p = 1;
 
-   int type = in->get_int();
-
-   if (type == 1) {
-      int seed = in->get_int();
-      in = auto_ptr<TestInput>(new RandomInput(seed));
-   }
-
-   int res = 0;
-   int p = 1;
-   for (int i = 0; i < n; ++i, p *= 239)
-   {
-      double x1 = in->get_double();
-      double y1 = in->get_double();
-      double x2 = in->get_double();
-      double y2 = in->get_double();
-      double x3 = in->get_double();
-      double y3 = in->get_double();
-      double x4 = in->get_double();
-      double y4 = in->get_double();
-      if (is_intersect(point(x1, y1), point(x2, y2), point(x3, y3), point(x4, y4)))
-      {
-         res += p;
-      }
-
+	if (type == 1) {
+		int seed;
+		cin >> seed;
+		random_generator rand(seed);
+		for (int i = 0; i < n; ++i, p *= 239)
+		{
+			double x1 = rand.get_double();
+			double y1 = rand.get_double();
+			double x2 = rand.get_double();
+			double y2 = rand.get_double();
+			double x3 = rand.get_double();
+			double y3 = rand.get_double();
+			double x4 = rand.get_double();
+			double y4 = rand.get_double();
+			
+			if (is_intersect(point(x1, y1), point(x2, y2), point(x3, y3), point(x4, y4)))
+			{
+				res += p;
+			}
+		}
+	}
+	else
+	{	
+		for (int i = 0; i < n; ++i, p *= 239)
+		{
+			double x1, y1, x2, y2, x3, y3, x4, y4;
+			cin >> x1 >> y1 >> x2 >> y2 >> x3 >> y3 >> x4 >> y4;
+			if (is_intersect(point(x1, y1), point(x2, y2), point(x3, y3), point(x4, y4)))
+			{
+				res += p;
+			}
+	   }
    }
    cout << res << "\n";
    return 0;
