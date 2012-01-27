@@ -2,6 +2,7 @@
 #pragma once
 #include <assert.h>
 #include <limits>
+#include <stddef.h>
 
 namespace adaptive_arithmetic
 {
@@ -11,7 +12,7 @@ namespace adaptive_arithmetic
 	//requires |a| >= |b|
 	inline void fast_two_sum(double const a, double const b, double& x, double& y)
 	{
-		assert(abs(a) >= abs(b));		
+		//assert(abs(a) >= abs(b));		
 		x = a + b;
 		double b_virtual = x - a;
 		y = b - b_virtual;
