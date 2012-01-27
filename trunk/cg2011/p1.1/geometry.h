@@ -10,4 +10,4 @@ struct point
 };
 
 int turn(point const& a1, point const& a2, point const& b);
-bool is_intersect(point const& a1, point const& a2, point const& b1, point const& b2);
+bool is_intersect(point const a1, point const a2, point const b1, point const b2);
