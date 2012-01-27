@@ -67,6 +67,13 @@ bool is_intersect(point const a1, point const a2, point const b1, point const b2
 				return true;
 			}
 		}
+		else
+		{
+			if (reliable == 4)
+			{
+				return false;
+			}
+		}
 
 		if (robust_turn(a1, a2, b1) * robust_turn(a1, a2, b2) <= 0 && robust_turn(b1, b2, a1) * robust_turn(b1, b2, a2) <= 0)
 		{
