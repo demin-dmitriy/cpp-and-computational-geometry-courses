@@ -39,7 +39,7 @@ namespace adaptive_arithmetic
 		h[M] = q;
 	}
 
-	/* there is exists faster version of expansion sum.
+	/* There exists faster version of expansion sum
 	 * which works at linear time. 
 	 * However, at small arrays and with unrolling cycles
 	 * optimization, this one can produce better results.
