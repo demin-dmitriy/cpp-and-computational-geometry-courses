@@ -26,6 +26,10 @@ struct point
     }
 };
 
+std::ostream& operator<<(std::ostream&, geometry::point const&);
+
+std::istream& operator>>(std::istream&, geometry::point&);
+
 // Returns sign([a1b, a1a2])
 int left_turn(point const a1, point const a2, point const b);
 
@@ -44,9 +48,6 @@ OutputIterator convex_hull(
 
 } // namespace geometry
 
-std::ostream& operator<<(std::ostream&, geometry::point const&);
-
-std::istream& operator>>(std::istream&, geometry::point&);
 
 #include "convex_hull.impl.h"
 
