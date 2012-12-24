@@ -2,6 +2,7 @@
 
 #include <cassert>
 
+#include <algorithm>
 #include <iostream>
 #include <iterator>
 #include <fstream>
@@ -24,11 +25,8 @@ int run(istream& in, ostream& out)
     convex_hull(points.begin(), points.end(), back_inserter(out_v));
     int out_n = out_v.size();
     out << out_n << '\n';
-    for (int i = 0; i != out_n; ++i)
-    {
-        out.precision(50);
-        out << out_v[i] << '\n';
-    }
+    out.precision(50);
+    copy(out_v.begin(), out_v.end(), ostream_iterator<point>(out, "\n"));
     return 0;
 }
 
