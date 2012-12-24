@@ -35,6 +35,7 @@ if __name__ == "__main__":
     for i in range(20):
         print("test {}:".format(i))
         test("correctness_tests\\{}.in".format(str(i).zfill(3)))
+    # Note: Perfomance tests take many time because of a lot of io.
     print("Perfomance tests:")
     for i in range(2):
         print("test {}:".format(i))
