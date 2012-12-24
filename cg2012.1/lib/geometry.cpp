@@ -145,15 +145,3 @@ bool geometry::farther_than(
     }
     return res;
 }
-
-std::ostream& geometry::operator<<(std::ostream& stream, point const& p)
-{
-    stream << p.x << ' ' << p.y;
-    return stream;
-}
-
-std::istream& geometry::operator>>(std::istream& stream, point& p)
-{
-    stream >> p.x >> p.y;
-    return stream;
-}
