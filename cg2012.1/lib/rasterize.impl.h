@@ -12,12 +12,12 @@ OutputIterator rasterize(point a, point b, OutputIterator out)
     {
         std::swap(a, b);
     }
-    int end_x = floor(b.x);
-    int end_y = floor(b.y);
-    int current_y = floor(a.y);
+    int end_x = static_cast<int>(b.x);
+    int end_y = static_cast<int>(b.y);
+    int current_y = static_cast<int>(a.y);
     if (a.y <= b.y)
     {
-        for (int i = floor(a.x); i != end_x; ++i)
+        for (int i = static_cast<int>(a.x); i != end_x; ++i)
         {
             *out++ = cell(i, current_y);
             while (true)
@@ -42,7 +42,7 @@ OutputIterator rasterize(point a, point b, OutputIterator out)
     }
     else
     {
-        for (int i = floor(a.x); i != end_x; ++i)
+        for (int i = static_cast<int>(a.x); i != end_x; ++i)
         {
             *out++ = cell(i, current_y);
             while (left_turn(b, a, point(i + 1, current_y)) < 0)
