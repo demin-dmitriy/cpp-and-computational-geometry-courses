@@ -10,12 +10,12 @@ using namespace std;
 
 int run(istream& in, ostream& out)
 {
+    typedef geometry::cell cell;
     geometry::point a, b;
     in >> a >> b;
-    typedef geometry::cell cell;
     vector<cell> out_v;
-    out_v.reserve(abs(floor(b.x) - floor(a.x))
-                  + abs(floor(b.y) - floor(a.y)) + 2);
+    out_v.reserve(abs(static_cast<int>(b.x) - static_cast<int>(a.x))
+                  + abs(static_cast<int>(b.y) - static_cast<int>(a.y)) + 2);
     rasterize(a, b, back_inserter(out_v));
     sort(out_v.begin(), out_v.end(),
          [](cell a, cell b){return (a.x != b.x) ? a.x < b.x : a.y < b.y;});

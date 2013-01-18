@@ -5,7 +5,7 @@
 
 #include <cassert>
 #include <cstddef>
-#include <limits>
+#include <climits>
 
 namespace adaptive_arithmetic
 {
@@ -17,7 +17,7 @@ namespace adaptive_arithmetic
     inline void fast_two_sum(
             double const a, double const b, double& x, double& y)
     {
-        //assert(abs(a) >= abs(b));        
+        //assert(std::abs(a) >= std::abs(b));
         x = a + b;
         double b_virtual = x - a;
         y = b - b_virtual;

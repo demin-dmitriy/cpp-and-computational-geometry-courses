@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.6)
 
-project(01-convex_hull)
+project(11-point_set_diameter)
 
 if (NOT CMAKE_BUILD_TYPE)
     message(STATUS "No build type selected, default to Release")
@@ -15,6 +15,6 @@ include_directories("../lib")
 
 add_library(Geometry "../lib/geometry.cpp")
 
-add_executable(convex_hull main.cpp)
+add_executable(point_set_diameter main.cpp)
 
-target_link_libraries(convex_hull Geometry)
+target_link_libraries(point_set_diameter Geometry)

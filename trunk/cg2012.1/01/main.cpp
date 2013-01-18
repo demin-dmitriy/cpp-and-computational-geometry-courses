@@ -17,9 +17,9 @@ int run(istream& in, ostream& out)
     in >> n;
     vector<point> points(n);
     assert(n > 0);
-    for (int i = 0; i != n; ++i)
+    for (auto& p: points)
     {
-        in >> points[i];
+        in >> p;
     }
     vector<point> out_v;
     convex_hull(points.begin(), points.end(), back_inserter(out_v));
