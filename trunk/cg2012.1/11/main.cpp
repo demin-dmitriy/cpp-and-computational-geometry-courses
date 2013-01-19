@@ -1,10 +1,7 @@
 #include "geometry.h"
 
-#include <algorithm>
 #include <iostream>
-#include <iterator>
 #include <vector>
-#include <utility>
 
 using namespace geometry;
 using namespace std;

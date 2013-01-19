@@ -103,6 +103,24 @@ namespace adaptive_arithmetic
         }
         return 0;
     }
+
+    template<size_t M>
+    inline void scale_expansion(double e[M], double b, double h[2 * M])
+    {
+        double Q;
+        two_product(e[0], b, Q, h[0]);
+        size_t h_index = 1;
+        for (size_t e_index = 1; e_index < M; ++e_index)
+        {
+            double T, t;
+            two_product(e[e_index], b, T, t);
+            two_sum(Q, t, Q, h[h_index]);
+            ++h_index;
+            fast_two_sum(T, Q, Q, h[h_index]);
+            ++h_index;
+        }
+        h[h_index] = Q;
+    }
 }
 
 #endif
