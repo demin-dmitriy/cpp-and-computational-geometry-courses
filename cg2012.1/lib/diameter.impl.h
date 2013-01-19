@@ -1,3 +1,4 @@
+#include <iterator>
 #include <vector>
 
 namespace geometry
@@ -59,4 +60,4 @@ std::pair<point, point> diameter(
     }
 }
 
-} // namespace geometry
+} // end of namespace geometry

@@ -156,6 +156,42 @@ int robust_compare_distance(
     return sign<24>(result);
 }
 
+in_circle_result robust_in_circle(point const a, point const b, point const x)
+{
+    using namespace adaptive_arithmetic;
+    double result[16];
+
+    two_product(a.x, b.x, result[0], result[1]);
+    two_product(a.x, -x.x, result[2], result[3]);
+    two_product(-x.x, b.x, result[4], result[5]);
+    two_product(x.x, x.x, result[6], result[7]);
+    two_product(a.y, b.y, result[8], result[9]);
+    two_product(a.y, -x.x, result[10], result[11]);
+    two_product(-x.y, b.y, result[12], result[13]);
+    two_product(x.y, x.y, result[14], result[15]);
+
+    expansion_sum<2, 2>(result, result + 2);
+    expansion_sum<2, 2>(result + 4, result + 6);
+    expansion_sum<2, 2>(result + 8, result + 10);
+    expansion_sum<2, 2>(result + 12, result + 14);
+    expansion_sum<4, 4>(result, result + 4);
+    expansion_sum<4, 4>(result + 8, result + 12);
+    expansion_sum<8, 8>(result, result + 8);
+
+    return static_cast<in_circle_result>(sign<16>(result));
+}
+
+in_circle_result fast_in_circle(point const a, point const b, point const x)
+{
+    double t1 = (a.x - x.x) * (b.x - x.x);
+    double t2 = (a.y - x.y) * (b.y - x.y);
+    if (std::abs(t1 + t2) > 4 * DBL_EPSILON * (std::abs(t1) + std::abs(t2)))
+    {
+        return (t1 + t2 > 0) ? geometry::outside : geometry::inside;
+    }
+    return geometry::inexact;
+}
+
 } // end of namespace
 
 // Returns orientation of point b relative to vector a2a1.
@@ -202,6 +238,16 @@ int geometry::compare_distance(
     if (res == 0)
     {
         res = robust_compare_distance(a1, a2, b1, b2);
+    }
+    return res;
+}
+
+in_circle_result geometry::in_circle(point a, point b, point x)
+{
+    in_circle_result res = fast_in_circle(a, b, x);
+    if (res == geometry::inexact)
+    {
+        res = robust_in_circle(a, b, x);
     }
     return res;
 }

@@ -30,21 +30,32 @@ class Display:
         self.status_text.pack()
         self.width = width
         self.height = height
-        self.xRange = xRange
-        self.yRange = yRange
+        Range = Display.Range
+        if xRange.max == xRange.min:
+            xRange.max += 1
+            xRange.min -= 1
+        if yRange.max == yRange.min:
+            yRange.max += 1
+            yRange.min -= 1
+        self.xRange = Range(xRange.min - abs(xRange.max - xRange.min) * 0.02, xRange.max + abs(xRange.max - xRange.min) * 0.02)
+        self.yRange = Range(yRange.min - abs(yRange.max - yRange.min) * 0.02, yRange.max + abs(yRange.max - yRange.min) * 0.02)
         self.root.bind('<Key-Escape>', self.end)
-    
+        self.root.bind('<Key-space>', self.close)
+        
     def end(self, event):
         exit(0)
 
+    def close(self, event):
+        self.root.destroy()
+        
     def relative2absolute(self, x, y):
         x_res = (x - self.xRange.min) / (self.xRange.max - self.xRange.min) * self.width
-        y_res = (y - self.yRange.min) / (self.yRange.max - self.yRange.min) * self.height
+        y_res = (1 - (y - self.yRange.min) / (self.yRange.max - self.yRange.min)) * self.height
         return (int(x_res), int(y_res))
     
     def absolute2relative(self, x, y):
         x_res = x * ((self.xRange.max - self.xRange.min) / self.width) + self.xRange.min
-        y_res = y * ((self.yRange.max - self.yRange.min) / self.height) + self.yRange.min
+        y_res = (1 - y / self.height) * ((self.yRange.max - self.yRange.min) ) + self.yRange.min
         return (x_res, y_res)
         
     def checkCordInArea(self, x, y):
@@ -73,6 +84,7 @@ class Display:
         self.canvas.create_polygon(*cord_list, outline=rgb2hex(color), fill='')
         
     def run(self):
+        self.root.focus_force()
         self.root.mainloop()
 
 def loadPointsFromString(str):
