@@ -145,7 +145,7 @@ circle_t mindisk(RandomAccessIterator first, RandomAccessIterator last);
 template<typename ForwardIterator>
 circle_t b_mindisk(ForwardIterator first, ForwardIterator last, int n = 0);
 
-} // namespace geometry
+} // end of namespace geometry
 
 #include "base_point.impl.h"
 #include "circle.impl.h"

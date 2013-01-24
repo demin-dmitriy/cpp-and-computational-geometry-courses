@@ -82,6 +82,37 @@ class Display:
             cord_list.append(p[0])
             cord_list.append(p[1])
         self.canvas.create_polygon(*cord_list, outline=rgb2hex(color), fill='')
+    
+    def putLine(self, a, b, color=(0, 200, 100)):
+        a = self.relative2absolute(*a)
+        b = self.relative2absolute(*b)
+        color = rgb2hex(color)
+        self.canvas.create_line(a[0], a[1], b[0], b[1], fill=color)
+    
+    def putRay(self, center, direction, color=(0, 200, 100)):
+        t = None
+        if direction[0] != 0:
+            tmp = (self.xRange.max - center[0]) / direction[0]
+            if 0 < tmp and (not t or tmp < t):
+                t = tmp
+            tmp = (self.xRange.min - center[0]) / direction[0]
+            if 0 < tmp and (not t or tmp < t):
+                t = tmp
+        if direction[1] != 0:
+            tmp = (self.yRange.max - center[1]) / direction[1]
+            if 0 < tmp and (not t or tmp < t):
+                t = tmp
+            tmp = (self.yRange.min - center[1]) / direction[1]
+            if 0 < tmp and (not t or tmp < t):
+                t = tmp
+        if t == None:
+            print("Error: can't draw a ray.")
+        else:
+            self.putLine(center, (center[0] + t * direction[0], center[1] + t * direction[1]), color)
+    
+    def putStraightLine(self, point, direction, color=(0, 200, 100)):
+        self.putRay(point, direction, color)
+        self.putRay(point, (-direction[0], -direction[1]), color)
         
     def run(self):
         self.root.focus_force()
