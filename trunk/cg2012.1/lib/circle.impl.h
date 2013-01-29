@@ -3,10 +3,10 @@ namespace geometry
 
 struct circle_t
 {
-    point points[3];
+    point_t points[3];
     int points_used;
 
-    circle_t(point a, point b, point c)
+    circle_t(point_t a, point_t b, point_t c)
         : points_used(3)
     {
         points[0] = a;
@@ -22,12 +22,12 @@ struct circle_t
         }
     }
 
-    circle_t(point a, point b)
+    circle_t(point_t a, point_t b)
         : points({a, b})
         , points_used(2)
     {}
 
-    circle_t(point a)
+    circle_t(point_t a)
         : points({a})
         , points_used(1)
     {
@@ -35,11 +35,11 @@ struct circle_t
     }
 
     circle_t()
-        : points({point(0, 0)})
+        : points({point_t(0, 0)})
         , points_used(0)
     {}
 
-    void add_point(point const& d)
+    void add_point(point_t const& d)
     {
         //assert(points_used < 3);
         if (points_used == 2 && left_turn(points[0], points[1], d) == -1)
@@ -54,7 +54,7 @@ struct circle_t
         ++points_used;
     }
 
-    bool contains(point x)
+    bool contains(point_t x)
     {
         switch (points_used)
         {

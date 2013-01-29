@@ -6,33 +6,33 @@ namespace geometry
 
 struct left_turn_pred_
 {
-    bool operator()(point const& p)
+    bool operator()(point_t const& p)
     {
         return left_turn(p1, p2, p) > 0;
     }
 
-    left_turn_pred_(point const& p1, point const& p2)
+    left_turn_pred_(point_t const& p1, point_t const& p2)
         : p1(p1)
         , p2(p2)
     {}
 
-    point const& p1;
-    point const& p2;
+    point_t const& p1;
+    point_t const& p2;
 };
 
 template<typename BidirectionalIterator, typename OutputIterator>
 void quick_hull_iteration_(
         BidirectionalIterator first,
         BidirectionalIterator last,
-        point const p1,
-        point const p2,
+        point_t const p1,
+        point_t const p2,
         OutputIterator& out)
 {
     using namespace std;
     using namespace std::placeholders;
     if (first != last)
     {
-        point const mid_p = *std::max_element(
+        point_t const mid_p = *std::max_element(
                     first, last, std::bind(farther_than, p1, p2, _1, _2));
         if (left_turn(p1, p2, mid_p) == -1)
         {
@@ -53,11 +53,11 @@ OutputIterator convex_hull(
 {
     if (first != last)
     {
-        auto const pred = [](point a, point b) {
+        auto const pred = [](point_t a, point_t b) {
             return (a.x != b.x) ? (a.x < b.x) : (a.y < b.y);
         };
-        point const p1 = *std::min_element(first, last, pred);
-        point const p2 = *std::max_element(first, last, pred);
+        point_t const p1 = *std::min_element(first, last, pred);
+        point_t const p2 = *std::max_element(first, last, pred);
         *out++ = p1;
         if (p1 != p2)
         {

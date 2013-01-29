@@ -5,11 +5,11 @@ namespace geometry
 {
 
 template<typename BidirectionalIterator>
-std::pair<point, point> diameter(
+std::pair<point_t, point_t> diameter(
         BidirectionalIterator first,
         BidirectionalIterator last)
 {
-    std::vector<point> candidates;
+    std::vector<point_t> candidates;
     convex_hull(first, last, back_inserter(candidates));
     if (candidates.size() <= 2)
     {

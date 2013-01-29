@@ -10,7 +10,7 @@ int run(istream& in, ostream& out)
 {
     int n;
     in >> n;
-    vector<point> points(n);
+    vector<point_t> points(n);
     for (auto& p: points)
     {
         in >> p;
