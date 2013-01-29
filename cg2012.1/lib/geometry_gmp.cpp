@@ -1,4 +1,4 @@
-// This includes implementations of functions that require gmp.
+// This file contains implementations of functions that require gmp.
 
 #include "geometry.h"
 
@@ -9,12 +9,12 @@
 namespace
 {
 
-using geometry::point;
+using geometry::point_t;
 using geometry::in_circle_result;
 
 // probably better to use another expression.
 in_circle_result robust_in_circle(
-        point const a, point const b, point const c, point const d)
+        point_t const a, point_t const b, point_t const c, point_t const d)
 {
     mpq_t adx, ady, bdx, bdy, cdx, cdy;
     mpq_inits(adx, ady, bdx, bdy, cdx, cdy, NULL);
@@ -87,7 +87,7 @@ in_circle_result robust_in_circle(
 }
 
 in_circle_result fast_in_circle(
-        point const a, point const b, point const c, point const d)
+        point_t const a, point_t const b, point_t const c, point_t const d)
 {
     using std::abs;
     double adx = a.x - d.x;
@@ -132,7 +132,7 @@ namespace geometry
 {
 
 in_circle_result in_circle(
-        point const a, point const b, point const c, point const d)
+        point_t const a, point_t const b, point_t const c, point_t const d)
 {
     in_circle_result res = fast_in_circle(a, b, c, d);
     if (res == geometry::inexact)

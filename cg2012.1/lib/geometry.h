@@ -16,15 +16,12 @@ std::ostream& operator<<(std::ostream& stream, base_point_t<T> const& p);
 template<typename T>
 std::istream& operator>>(std::istream& stream, base_point_t<T>& p);
 
-// Probably needs some renaming (later).
-typedef base_point_t<double> point;
+typedef base_point_t<double> point_t;
 
-typedef base_point_t<int> cell;
+typedef base_point_t<int> cell_t;
 
 struct circle_t;
 
-// <todo: Fix description>.
-// <todo: rename point to point_t and cell to cell_t>
 // <todo: replace integer results with enum values>
 
 /*
@@ -32,7 +29,7 @@ struct circle_t;
  *
  * Robust. uses adaptive precision.
  */
-int left_turn(point a1, point a2, point b);
+int left_turn(point_t a1, point_t a2, point_t b);
 
 /*
  * Checks whether segments a1a2 and b1b2 intersect.
@@ -40,14 +37,14 @@ int left_turn(point a1, point a2, point b);
  *
  * Robust. Uses adaptive precision.
  */
-bool intersect(point a1, point a2, point b1, point b2);
+bool intersect(point_t a1, point_t a2, point_t b1, point_t b2);
 
 /*
  * Returns true if b farther from line a1a2 than c and false otherwise.
  *
  * Robust. Uses adaptive precision.
  */
-bool farther_than(point a1, point a2, point b, point c);
+bool farther_than(point_t a1, point_t a2, point_t b, point_t c);
 
 /*
  * Compares lengths of a1a2 and b1b2.
@@ -55,7 +52,7 @@ bool farther_than(point a1, point a2, point b, point c);
  *
  * Robust. Uses adaptive precision.
  */
-int compare_distance(point a1, point a2, point b1, point b2);
+int compare_distance(point_t a1, point_t a2, point_t b1, point_t b2);
 
 enum in_circle_result
 {
@@ -71,7 +68,7 @@ enum in_circle_result
  *
  * Robust. Uses adaptive precision.
  */
-in_circle_result in_circle(point a, point b, point x);
+in_circle_result in_circle(point_t a, point_t b, point_t x);
 
 /*
  * Finds position of point x relative to closed oriented circle constructed by
@@ -82,12 +79,12 @@ in_circle_result in_circle(point a, point b, point x);
  *
  * Robust. Uses GMP.
  */
-in_circle_result in_circle(point a, point b, point c, point x);
+in_circle_result in_circle(point_t a, point_t b, point_t c, point_t x);
 
 /*
- * Calculates a minimal set of points forming convex hull of points in
- * [first; last). Puts its result into a range beginning at out and returns
- * an iterator pointing to the past-the-end element in the resulting sequence.
+ * Calculates minimal set of points forming convex hull of points in
+ * [first; last). Puts its result into a range beginning at out and returns an
+ * iterator pointing to the past-the-end element in the resulting sequence.
  *
  * As a side-effect it changes the order of elements in [first; last).
  *
@@ -118,7 +115,7 @@ OutputIterator convex_hull(
  * Memory usage: O(1).
  */
 template<typename OutputIterator>
-OutputIterator rasterize(point a, point b, OutputIterator out);
+OutputIterator rasterize(point_t a, point_t b, OutputIterator out);
 
 /*
  * Finds a pair of two most distant points from range [first; last).
@@ -126,24 +123,50 @@ OutputIterator rasterize(point a, point b, OutputIterator out);
  * It uses convex_hull as subprocedure therefore it changes order of elements
  * in [first; last)
  *
- * Time complexity O(convex_hull) + O(n). (O(n log(n)) expected time).
+ * Time complexity: O(convex_hull) + O(n). (O(n log(n)) expected time).
  * Memory usage: O(convex hull size) + O(1).
  */
 template<typename BidirectionalIterator>
-std::pair<point, point> diameter(
+std::pair<point_t, point_t> diameter(
         BidirectionalIterator first,
         BidirectionalIterator last);
+
 /*
+ * Finds minimum circle containing all points in range [first; last).
+ * Randomizes points order on enter. If sequence of point are known to be random
+ * or there is no random access iterator avaliable then b_mindisk(first, last)
+ * could be used instead.
  *
+ * Order of points in [first; last) is not preserved.
+ *
+ * Returns minimum circumcircle.
+ *
+ * Time complexity: O(n) expected time.
+ * Memory usage: O(1).
  */
 template<typename RandomAccessIterator>
 circle_t mindisk(RandomAccessIterator first, RandomAccessIterator last);
 
 /*
+ * Finds minimum circle containing all points in range [first; last).
+ * Parameter n is for internal use and should be left default.
  *
+ * As side effect it shuffles order of points in [first; last) during it's work.
+ * Order of points in [first; last) should be randomized before call to expect
+ * consumed time to be O(n).
+ *
+ * Returns minimum circumcircle.
+ *
+ * Time complexity: O(n) expected time.
+ * Memory usage: O(1)
  */
 template<typename ForwardIterator>
 circle_t b_mindisk(ForwardIterator first, ForwardIterator last, int n = 0);
+
+/*
+ *
+ */
+struct voronoi_diagram;
 
 } // end of namespace geometry
 

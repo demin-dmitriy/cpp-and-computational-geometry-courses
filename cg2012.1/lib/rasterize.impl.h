@@ -6,7 +6,7 @@ namespace geometry
 {
 
 template<typename OutputIterator>
-OutputIterator rasterize(point a, point b, OutputIterator out)
+OutputIterator rasterize(point_t a, point_t b, OutputIterator out)
 {
     if (b.x < a.x)
     {
@@ -19,10 +19,10 @@ OutputIterator rasterize(point a, point b, OutputIterator out)
     {
         for (int i = static_cast<int>(floor(a.x)); i != end_x; ++i)
         {
-            *out++ = cell(i, current_y);
+            *out++ = cell_t(i, current_y);
             while (true)
             {
-                int turn = left_turn(b, a, point(i + 1, current_y + 1));
+                int turn = left_turn(b, a, point_t(i + 1, current_y + 1));
                 if (turn < 0)
                 {
                     break;
@@ -30,13 +30,13 @@ OutputIterator rasterize(point a, point b, OutputIterator out)
                 ++current_y;
                 if (turn != 0)
                 {
-                    *out++ = cell(i, current_y);
+                    *out++ = cell_t(i, current_y);
                 }
             }
         }
         while (current_y != end_y)
         {
-            *out++ = cell(end_x, current_y);
+            *out++ = cell_t(end_x, current_y);
             ++current_y;
         }
     }
@@ -44,20 +44,20 @@ OutputIterator rasterize(point a, point b, OutputIterator out)
     {
         for (int i = static_cast<int>(floor(a.x)); i != end_x; ++i)
         {
-            *out++ = cell(i, current_y);
-            while (left_turn(b, a, point(i + 1, current_y)) < 0)
+            *out++ = cell_t(i, current_y);
+            while (left_turn(b, a, point_t(i + 1, current_y)) < 0)
             {
                 --current_y;
-                *out++ = cell(i, current_y);
+                *out++ = cell_t(i, current_y);
             }
         }
         while (current_y != end_y)
         {
-            *out++ = cell(end_x, current_y);
+            *out++ = cell_t(end_x, current_y);
             --current_y;
         }
     }
-    *out++ = cell(end_x, end_y);
+    *out++ = cell_t(end_x, end_y);
     return out;
 }
 

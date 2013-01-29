@@ -8,15 +8,15 @@ using namespace std;
 
 int run(istream& in, ostream& out)
 {
-    using geometry::point;
+    using geometry::point_t;
     int n;
     in >> n;
-    vector<point> points(n);
+    vector<point_t> points(n);
     for (auto& p: points)
     {
         in >> p;
     }
-    vector<point> points_copy(points);
+    vector<point_t> points_copy(points);
     geometry::circle_t circle = geometry::mindisk(points.begin(), points.end());
     out << circle.points_used << '\n';
     for (int i = 0; i != circle.points_used; ++i)

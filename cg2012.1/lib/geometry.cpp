@@ -12,7 +12,7 @@ namespace
 
 // Returns sign of the expression
 // a2.x * b.y - a2.x * a1.y - a1.x * b.y - a2.y * b.x + a2.y * a1.x + a1.y * b.x
-int robust_turn(point const a1, point const a2, point const b)
+int robust_turn(point_t const a1, point_t const a2, point_t const b)
 {
     using namespace adaptive_arithmetic;
     double result[12];
@@ -34,7 +34,7 @@ int robust_turn(point const a1, point const a2, point const b)
     return sign<12>(result);
 }
 
-int fast_turn(point const a1, point const a2, point const b)
+int fast_turn(point_t const a1, point_t const a2, point_t const b)
 {
     double t1 = (a2.x - a1.x) * (b.y - a1.y);
     double t2 = (a2.y - a1.y) * (b.x - a1.x);
@@ -46,7 +46,7 @@ int fast_turn(point const a1, point const a2, point const b)
 }
 
 bool check_bounding_box(
-        point const a1, point const a2, point const b1, point const b2)
+        point_t const a1, point_t const a2, point_t const b1, point_t const b2)
 {
     using namespace std;
 
@@ -67,7 +67,7 @@ bool check_bounding_box(
 // (a2.x * b.y - a2.x * c.y - a1.x * b.y + a1.x * c.y - a2.y * b.x + a2.y * c.x
 //          + a1.y * b.x - a1.y * c.x > 0)
 bool robust_farther_than(
-        point const a1, point const a2, point const b, point const c)
+        point_t const a1, point_t const a2, point_t const b, point_t const c)
 {
     using namespace adaptive_arithmetic;
     double result[16];
@@ -94,7 +94,7 @@ bool robust_farther_than(
 }
 
 int fast_farther_than(
-        point const a1, point const a2, point const b, point const c)
+        point_t const a1, point_t const a2, point_t const b, point_t const c)
 {
     double t1 = (a2.x - a1.x) * (b.y - c.y);
     double t2 = (a2.y - a1.y) * (b.x - c.x);
@@ -106,7 +106,7 @@ int fast_farther_than(
 }
 
 int fast_compare_distance(
-        point const a1, point const a2, point const b1, point const b2)
+        point_t const a1, point_t const a2, point_t const b1, point_t const b2)
 {
     double ax2 = (a2.x - a1.x) * (a2.x - a1.x);
     double ay2 = (a2.y - a1.y) * (a2.y - a1.y);
@@ -122,7 +122,7 @@ int fast_compare_distance(
 }
 
 int robust_compare_distance(
-        point const a1, point const a2, point const b1, point const b2)
+        point_t const a1, point_t const a2, point_t const b1, point_t const b2)
 {
     using namespace adaptive_arithmetic;
     double result[24];
@@ -156,7 +156,8 @@ int robust_compare_distance(
     return sign<24>(result);
 }
 
-in_circle_result robust_in_circle(point const a, point const b, point const x)
+in_circle_result robust_in_circle(
+        point_t const a, point_t const b, point_t const x)
 {
     using namespace adaptive_arithmetic;
     double result[16];
@@ -181,7 +182,8 @@ in_circle_result robust_in_circle(point const a, point const b, point const x)
     return static_cast<in_circle_result>(sign<16>(result));
 }
 
-in_circle_result fast_in_circle(point const a, point const b, point const x)
+in_circle_result fast_in_circle(
+        point_t const a, point_t const b, point_t const x)
 {
     double t1 = (a.x - x.x) * (b.x - x.x);
     double t2 = (a.y - x.y) * (b.y - x.y);
@@ -195,7 +197,7 @@ in_circle_result fast_in_circle(point const a, point const b, point const x)
 } // end of namespace
 
 // Returns orientation of point b relative to vector a2a1.
-int geometry::left_turn(point const a1, point const a2, point const b)
+int geometry::left_turn(point_t const a1, point_t const a2, point_t const b)
 {
     int res = fast_turn(a1, a2, b);
     if (res == 0)
@@ -206,7 +208,7 @@ int geometry::left_turn(point const a1, point const a2, point const b)
 }
 
 bool geometry::intersect(
-        point const a1, point const a2, point const b1, point const b2)
+        point_t const a1, point_t const a2, point_t const b1, point_t const b2)
 {
     if (check_bounding_box(a1, a2, b1, b2)
             && left_turn(a1, a2, b1) * left_turn(a1, a2, b2) <= 0
@@ -221,7 +223,7 @@ bool geometry::intersect(
 }
 
 bool geometry::farther_than(
-        point const a1, point const a2, point const b, point const c)
+        point_t const a1, point_t const a2, point_t const b, point_t const c)
 {
     int res = fast_farther_than(a1, a2, b, c);
     if (res == -1)
@@ -232,7 +234,7 @@ bool geometry::farther_than(
 }
 
 int geometry::compare_distance(
-        point const a1, point const a2, point const b1, point const b2)
+        point_t const a1, point_t const a2, point_t const b1, point_t const b2)
 {
     int res = fast_compare_distance(a1, a2, b1, b2);
     if (res == 0)
@@ -242,7 +244,7 @@ int geometry::compare_distance(
     return res;
 }
 
-in_circle_result geometry::in_circle(point a, point b, point x)
+in_circle_result geometry::in_circle(point_t a, point_t b, point_t x)
 {
     in_circle_result res = fast_in_circle(a, b, x);
     if (res == geometry::inexact)
