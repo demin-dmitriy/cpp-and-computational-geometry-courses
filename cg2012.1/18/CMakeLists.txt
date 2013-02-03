@@ -11,9 +11,11 @@ set(CMAKE_CXX_FLAGS "-Wall -Wconversion -std=c++11")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -ffloat-store")
 set(CMAKE_CXX_FLAGS_DEBUG "-g3 -O0")
 
+find_package(Boost REQUIRED)
+include_directories(${Boost_INCLUDE_DIRS})
 include_directories("../lib")
 
-add_library(Geometry "../lib/geometry.cpp")
+add_library(Geometry "../lib/geometry.cpp" "../lib/voronoi_diagram.cpp")
 
 add_executable(voronoi_diagram main.cpp)
 

@@ -61,7 +61,8 @@ OutputIterator convex_hull(
         *out++ = p1;
         if (p1 != p2)
         {
-            auto const mid = std::partition(first, last, left_turn_pred_(p2, p1));
+            auto const mid = std::partition(
+                        first, last, left_turn_pred_(p2, p1));
             quick_hull_iteration_(first, mid, p1, p2, out);
             *out++ = p2;
             quick_hull_iteration_(mid, last, p2, p1, out);

@@ -3,11 +3,14 @@
 #include <iterator>
 #include <unordered_map>
 
-#include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
-#include <CGAL/Delaunay_triangulation_2.h>
-#include <CGAL/Voronoi_diagram_2.h>
-#include <CGAL/Delaunay_triangulation_adaptation_traits_2.h>
-#include <CGAL/Delaunay_triangulation_adaptation_policies_2.h>
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
+    #include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
+    #include <CGAL/Delaunay_triangulation_2.h>
+    #include <CGAL/Voronoi_diagram_2.h>
+    #include <CGAL/Delaunay_triangulation_adaptation_traits_2.h>
+    #include <CGAL/Delaunay_triangulation_adaptation_policies_2.h>
+#pragma GCC diagnostic pop
 
 typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
 typedef CGAL::Delaunay_triangulation_2<K> DT;
