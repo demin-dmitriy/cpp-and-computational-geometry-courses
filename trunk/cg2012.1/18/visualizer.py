@@ -23,6 +23,9 @@ def test(file):
     points_desc = [list(map(lambda x: int(x) - 1, line.split()[1:])) for line in lines[1:1+n]]
     vertices = []
     for p in points_desc:
+        print(points[p[1]][1] - points[p[2]][1])
+        print(points[p[2]][1] - points[p[0]][1])
+        print(points[p[0]][1] - points[p[1]][1])
         D = 2 * (points[p[0]][0] * (points[p[1]][1] - points[p[2]][1]) + points[p[1]][0] * (points[p[2]][1] - points[p[0]][1]) + points[p[2]][0] * (points[p[0]][1] - points[p[1]][1]))
         x = (norm(points[p[0]]) * (points[p[1]][1] - points[p[2]][1]) + norm(points[p[1]]) * (points[p[2]][1] - points[p[0]][1]) + norm(points[p[2]]) * (points[p[0]][1] - points[p[1]][1])) / D
         y = -(norm(points[p[0]]) * (points[p[1]][0] - points[p[2]][0]) + norm(points[p[1]]) * (points[p[2]][0] - points[p[0]][0]) + norm(points[p[2]]) * (points[p[0]][0] - points[p[1]][0])) / D
@@ -74,9 +77,20 @@ def test(file):
     d.run()
 
 if __name__ == "__main__":
-    for i in range(48):
-        print("test {}".format(i))
-        test(".\\correctness_tests\\{}.in".format(str(i).zfill(3)))
-    for i in range(3):
-        print("test {}".format(i))
-        test(".\\performance_tests\\{}.in".format(str(i).zfill(3)))
+    argv = sys.argv
+    if len(argv) >= 2:
+        prefix = "correctness_tests"
+        if len(argv) >= 3:
+            if argv[1] == "p":
+                prefix = "performance_tests"
+            i = int(argv[2])
+        else:
+            i = int(argv[1])
+        test("..\\18-build\\{}\\{}.in".format(prefix, str(i).zfill(3)))
+    else:
+        for i in range(48):
+            print("test {}".format(i))
+            test("..\\18-build\\correctness_tests\\{}.in".format(str(i).zfill(3)))
+        for i in range(3):
+            print("test {}".format(i))
+            test("..\\18-build\\performance_tests\\{}.in".format(str(i).zfill(3)))

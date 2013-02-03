@@ -176,5 +176,6 @@ struct voronoi_diagram;
 #include "rasterize.impl.h"
 #include "diameter.impl.h"
 #include "mindisk.impl.h"
+#include "voronoi_diagram.impl.h"
 
 #endif // GEOMETRY_H

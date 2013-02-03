@@ -32,7 +32,7 @@ def test(file):
 
 if __name__ == "__main__":
     print("Correctness tests:")
-    for i in range(20):
+    for i in range(25):
         print("test {}:".format(i))
         test("correctness_tests\\{}.in".format(str(i).zfill(3)))
     # Note: Perfomance tests take many time because of a lot of io.

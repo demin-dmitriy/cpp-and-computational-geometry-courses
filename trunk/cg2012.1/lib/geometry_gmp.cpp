@@ -137,7 +137,7 @@ in_circle_result in_circle(
     in_circle_result res = fast_in_circle(a, b, c, d);
     if (res == geometry::inexact)
     {
-        res = robust_in_circle(a, b, c , d);
+        res = robust_in_circle(a, b, c, d);
     }
     return res;
 }
