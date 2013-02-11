@@ -36,23 +36,32 @@ def test(file):
     else:
         print("    Wrong answer.")
 
+def run_all_tests():
+    print("Correctness tests (0):")
+    for i in range(3):
+        print("test {}:".format(i))
+        test("correctness_tests_0\\{}.in".format(str(i).zfill(3)))
+    print("Correctness tests (1):")
+    for i in range(48):
+        print("test {}:".format(i))
+        test("correctness_tests_1\\{}.in".format(str(i).zfill(3)))
+    print("Performance tests:")
+    for i in range(3):
+        print("test {}:".format(i))
+        test("performance_tests\\{}.in".format(str(i).zfill(3)))
+ 
 if __name__ == "__main__":
     if len(argv) >= 2:
-        prefix = "correctness_tests"
-        if len(argv) >= 3:
+        prefix = "correctness_tests_1"
+        if len(argv) == 2:
+            num = int(argv[1])
+        else:
             if argv[1] == "p":
                 prefix = "performance_tests"
-            i = int(argv[2])
-        else:
-            i = int(argv[1])
-        test("{}\\{}.in".format(prefix, str(i).zfill(3)))
+            elif argv[1] == "c0":
+                prefix = "correctness_tests_0"
+            num = int(argv[2])
+        test("{}\\{}.in".format(prefix, str(num).zfill(3)))
     else:
-        print("Correctness tests:")
-        for i in range(48):
-            print("test {}:".format(i))
-            test("correctness_tests\\{}.in".format(str(i).zfill(3)))
-        print("Performance tests:")
-        for i in range(3):
-            print("test {}:".format(i))
-            test("performance_tests\\{}.in".format(str(i).zfill(3)))
+        run_all_tests()
     

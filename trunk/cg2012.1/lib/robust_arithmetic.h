@@ -3,21 +3,24 @@
 #ifndef ROBUST_ARITHMETIC_H
 #define ROBUST_ARITHMETIC_H
 
-#include <cassert>
 #include <cstddef>
 #include <climits>
 
-namespace adaptive_arithmetic
-{
-#ifdef DEBUG
-//    #include <math.h>
+#ifndef __GNUC__
+    #pragma message ("You are not using GCC compiler. Make sure that code in " \
+    "this header optimized correctly so you might need to use an option " \
+    "similar to -ffloat-store from GCC compiler.")
 #endif
 
+#pragma GCC push_options
+#pragma GCC optimize "-ffloat-store"
+
+namespace adaptive_arithmetic
+{
     //requires |a| >= |b|
     inline void fast_two_sum(
             double const a, double const b, double& x, double& y)
     {
-        //assert(std::abs(a) >= std::abs(b));
         x = a + b;
         double b_virtual = x - a;
         y = b - b_virtual;
@@ -122,5 +125,7 @@ namespace adaptive_arithmetic
         h[h_index] = Q;
     }
 }
+
+#pragma GCC pop_options
 
 #endif

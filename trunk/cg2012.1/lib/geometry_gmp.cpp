@@ -16,7 +16,9 @@ using geometry::in_circle_result;
 in_circle_result robust_in_circle(
         point_t const a, point_t const b, point_t const c, point_t const d)
 {
+    // Переписать в C++ стиле.
     mpq_t adx, ady, bdx, bdy, cdx, cdy;
+    mpq_init(adx);
     mpq_inits(adx, ady, bdx, bdy, cdx, cdy, NULL);
     mpq_t tmp1, tmp2, tmp3;
     mpq_inits(tmp1, tmp2, tmp3, NULL);
@@ -118,7 +120,7 @@ in_circle_result fast_in_circle(
     {
         return geometry::inside;
     }
-    else if (res < errbound)
+    else if (res < -errbound)
     {
         return geometry::outside;
     }

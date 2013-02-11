@@ -32,7 +32,7 @@ def test(file):
     d.run()
 
 if __name__ == "__main__":
-    test(".\\..\\01-build\\correctness_tests\\035.in")
+    test(".\\..\\01-build\\correctness_tests\\036.in")
     # for i in range(1, 48):
         # print("test {}".format(i))
         # test(".\\..\\01-build\\correctness_tests\\{}.in".format(str(i).zfill(3)))

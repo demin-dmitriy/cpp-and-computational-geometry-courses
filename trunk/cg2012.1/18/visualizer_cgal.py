@@ -1,5 +1,4 @@
-# note: some tests will be visualized incorrectly due to loss of precision and
-# visualizer doesn't use exact predicates.
+# note: some tests will be visualized incorrectly due to loss of precision.
 
 import sys
 sys.path.insert(0, "../lib")
@@ -9,8 +8,8 @@ from subprocess import Popen, PIPE
 width = 800
 height = 600
 
-#solution = ".\\..\\18-cgal-solution-build\\voronoi_diagram_cgal.exe"
-solution = ".\\..\\18-build\\voronoi_diagram.exe"
+solution = ".\\..\\18-cgal-solution-build\\voronoi_diagram_cgal.exe"
+#solution = ".\\..\\18-build\\voronoi_diagram.exe"
 
 sys.path.insert(0, "../18-build")
 
