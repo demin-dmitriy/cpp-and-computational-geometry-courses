@@ -64,7 +64,7 @@ bool check_bounding_box(
 }
 
 // Returns
-// (a2.x * b.y - a2.x * c.y - a1.x * b.y + a1.x * c.y - a2.y * b.x + a2.y * c.x
+// (a2.x * b.y - a2.x * c.y - a1.x *  b.y + a1.x * c.y - a2.y * b.x + a2.y * c.x
 //          + a1.y * b.x - a1.y * c.x > 0)
 bool robust_farther_than(
         point_t const a1, point_t const a2, point_t const b, point_t const c)

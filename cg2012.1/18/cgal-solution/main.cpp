@@ -44,7 +44,6 @@ struct vertex_handle_hash
 
 int run(std::istream& in, std::ostream& out)
 {
-
     int n;
     in >> n;
     VD vd;
