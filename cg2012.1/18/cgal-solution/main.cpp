@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <chrono>
 #include <iostream>
 #include <iterator>
 #include <unordered_map>
@@ -44,6 +45,7 @@ struct vertex_handle_hash
 
 int run(std::istream& in, std::ostream& out)
 {
+    using namespace std::chrono;
     int n;
     in >> n;
     VD vd;
@@ -55,6 +57,7 @@ int run(std::istream& in, std::ostream& out)
         s_index[site] = i + 1;
         vd.insert(site);
     }
+
     out << vd.number_of_vertices() << '\n';
     std::unordered_map<VD::Vertex_handle, int, vertex_handle_hash> v_index;
     int i = 0;

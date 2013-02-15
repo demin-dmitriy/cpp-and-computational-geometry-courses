@@ -164,7 +164,24 @@ template<typename ForwardIterator>
 circle_t b_mindisk(ForwardIterator first, ForwardIterator last, int n = 0);
 
 /*
+ * Calculates voronoi diagram for set of points in range [first; last).
+ * Constructor:
+ *  template<typename ForwardIterator>
+ *  voronoi_diagram(ForwardIterator begin, ForwardIterator end);
  *
+ * Prerequirement: points in range [first; last) shouldn't have duplicates.
+ *
+ * Voronoi diagram is constructed once at voronoi_diagram object creation and
+ * couldn't be modified or recalculated during it's lifetime.
+ *
+ * You can traverse through sites, half_edges and vertices.
+ * See voronoi_diagram.impl.h file for avaliable interface methods and
+ * structures.
+ *
+ * Implemented Fortune's algorithm.
+ *
+ * Time complexity: O(n log(n)) in worst case.
+ * Memory usage: O(n).
  */
 struct voronoi_diagram;
 

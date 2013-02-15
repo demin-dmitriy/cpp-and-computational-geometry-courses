@@ -8,7 +8,7 @@ if (NOT CMAKE_BUILD_TYPE)
 endif()
 
 set(CMAKE_CXX_FLAGS "-Wall -Wconversion -std=c++11")
-set(CMAKE_CXX_FLAGS_RELEASE "-O3 -ffloat-store")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 set(CMAKE_CXX_FLAGS_DEBUG "-g3 -O0")
 
 link_libraries(boost_system-mgw47-mt-1_50 CGAL)

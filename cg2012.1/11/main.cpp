@@ -23,5 +23,6 @@ int run(istream& in, ostream& out)
 
 int main()
 {
+
     return run(cin, cout);
 }

@@ -3,6 +3,9 @@
 namespace geometry
 {
 
+// Every unique edge, site or vertex has unique address. That is: if any two
+// objects in this diagram are equal (but might be recieved using different
+// methods) than they have same address.
 struct voronoi_diagram
 {
     typedef point_t site_t;
@@ -11,7 +14,7 @@ struct voronoi_diagram
     {
         std::vector<site_t const*> sites; // Sites form adjacent faces
 
-        vertex_t(){}
+        vertex_t() = default;
 
         template<typename Iterator>
         vertex_t(Iterator first, Iterator last)
@@ -45,17 +48,21 @@ struct voronoi_diagram
         process();
     }
 
-    // Half edges are grouped by pairs of twins during iteration.
+    // Half edges are grouped by pairs of twins during iteration. It could be
+    // used to efficiently iterate only trough unique edges by skipping every
+    // second halfedge.
     half_edge_const_iterator half_edges_begin() const;
     half_edge_const_iterator half_edges_end() const;
 
+    // Sites are ordered in the same order as they were given in the
+    // constructor.
     site_const_iterator sites_begin() const;
     site_const_iterator sites_end() const;
 
     vertex_const_iterator vertices_begin() const;
     vertex_const_iterator vertices_end() const;
 
-    // 2 * edges_count() == half_edges_count()
+    // Invariant: 2 * edges_count() == half_edges_count()
     size_t edges_count() const;
     size_t half_edges_count() const;
     size_t vertices_count() const;
