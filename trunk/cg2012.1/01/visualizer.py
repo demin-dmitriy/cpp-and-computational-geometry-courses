@@ -26,13 +26,13 @@ def test(file):
 
     p = Popen([solution], stdin=open(file), stdout=PIPE, shell=True, universal_newlines=True)
     out = loadPointsFromString(p.stdout.read().partition('\n')[2])
-    print("Out: ", out)
+    #print("Out: ", out)
     d.putPolygon(out)
 
     d.run()
 
 if __name__ == "__main__":
-    test(".\\..\\01-build\\correctness_tests\\036.in")
+    test(".\\..\\01-build\\performance_tests\\002.in")
     # for i in range(1, 48):
         # print("test {}".format(i))
         # test(".\\..\\01-build\\correctness_tests\\{}.in".format(str(i).zfill(3)))

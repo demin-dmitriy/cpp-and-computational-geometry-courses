@@ -7,8 +7,8 @@ if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release")
 endif()
 
-set(CMAKE_CXX_FLAGS "-Wall -Wconversion -ffloat-store -std=c++11")
-set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
+set(CMAKE_CXX_FLAGS "-Wall -Wconversion -std=c++11")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3 -ffloat-store -DNDEBUG")
 set(CMAKE_CXX_FLAGS_DEBUG "-g3 -O0")
 
 find_package(Boost REQUIRED)
@@ -17,7 +17,7 @@ include_directories("../lib")
 
 link_libraries(gmp)
 
-add_library(Geometry "../lib/geometry.cpp" "../lib/voronoi_diagram.cpp" "../lib/geometry_gmp.cpp")
+add_library(Geometry "../lib/geometry.cpp" "../lib/voronoi_diagram/voronoi_diagram.cpp" "../lib/geometry_gmp.cpp")
 
 add_executable(voronoi_diagram main.cpp)
 

@@ -8,8 +8,7 @@ struct base_point_t
 {
     T x;
     T y;
-    base_point_t()
-    {}
+    base_point_t() = default;
     base_point_t(T x, T y)
         : x(x)
         , y(y)

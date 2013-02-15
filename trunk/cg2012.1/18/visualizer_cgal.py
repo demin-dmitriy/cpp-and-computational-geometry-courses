@@ -1,4 +1,5 @@
-# note: some tests will be visualized incorrectly due to loss of precision.
+# note: some tests will be visualized incorrectly due to loss of precision and
+# visualizer doesn't use exact predicates.
 
 import sys
 sys.path.insert(0, "../lib")
