@@ -83,15 +83,17 @@ if __name__ == "__main__":
     argv = sys.argv
     if len(argv) >= 2:
         prefix = "correctness_tests_1"
-        if len(argv) >= 3:
+        if len(argv) == 2:
+            num = int(argv[1])
+        else:
             if argv[1] == "p":
                 prefix = "performance_tests"
-            i = int(argv[2])
-        else:
-            i = int(argv[1])
-        test("..\\18-build\\{}\\{}.in".format(prefix, str(i).zfill(3)))
+            elif argv[1] == "c0":
+                prefix = "correctness_tests_0"
+            num = int(argv[2])
+        test("..\\18-build\\{}\\{}.in".format(prefix, str(num).zfill(3)))
     else:
-        for i in range(3):
+        for i in range(4):
             print("test {}".format(i))
             test("..\\18-build\\correctness_tests_0\\{}.in".format(str(i).zfill(3)))
         for i in range(48):
