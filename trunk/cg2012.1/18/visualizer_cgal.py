@@ -91,7 +91,7 @@ if __name__ == "__main__":
             i = int(argv[1])
         test("..\\18-build\\{}\\{}.in".format(prefix, str(i).zfill(3)))
     else:
-        for i in range(3):
+        for i in range(4):
             print("test {}".format(i))
             test("..\\18-build\\correctness_tests_0\\{}.in".format(str(i).zfill(3)))
         for i in range(48):

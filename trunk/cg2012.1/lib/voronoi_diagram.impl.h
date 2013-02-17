@@ -3,7 +3,7 @@
 namespace geometry
 {
 
-// Every unique edge, site or vertex has unique address. That is: if any two
+// Every unique edge, site or vertex has unique address. That's it: if any two
 // objects in this diagram are equal (but might be recieved using different
 // methods) than they have same address.
 struct voronoi_diagram
