@@ -1,7 +1,10 @@
+#include <algorithm>
+#include <functional>
 #include <fstream>
 #include <vector>
 
-#include "geometry.h"
+#include "geometry/geometry_fwd.h"
+#include "geometry/voronoi_diagram.h"
 
 int run(std::istream& in, std::ostream& out)
 {
@@ -31,14 +34,14 @@ int run(std::istream& in, std::ostream& out)
         {}
         bool operator()(point_t const* l, point_t const* r) const
         {
-            return -1 == geometry::left_turn(*control_point, *r, *l);
+            return geometry::left == geometry::turn(*control_point, *l, *r);
         }
     };
 
-    point_t const* first = &*vd.sites_begin();
-    auto get_index = [first](point_t const* p) {
-        return p - first + 1;
-    };
+    using namespace std::placeholders;
+    // NOTE: There is might be an error.
+    auto get_index = std::bind(
+                std::distance<point_t const*>,&*vd.sites_begin(), _1);
 
     for (auto v_it = vd.vertices_begin(), end = vd.vertices_end();
          v_it != end; ++v_it)
@@ -47,12 +50,12 @@ int run(std::istream& in, std::ostream& out)
         auto site = vertex.sites.front();
         std::vector<point_t const*> points(++vertex.sites.begin(),
                                            vertex.sites.end());
-        sort(points.begin(), points.end(), turn_pred(site));
+        std::sort(points.begin(), points.end(), turn_pred(site));
         point_t const* prev = points.front();
         for (auto it = ++points.begin(), end = points.end(); it != end; ++it)
         {
-            out << get_index(site) << ' ' << get_index(prev);
-            out << ' ' << get_index(*it) << '\n';
+            out << get_index(site) + 1 << ' ' << get_index(prev) + 1;
+            out << ' ' << get_index(*it) + 1 << '\n';
             prev = *it;
         }
     }

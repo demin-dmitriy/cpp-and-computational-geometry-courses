@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.6)
 
-project(13-point_set_delaunay_triangulation)
+project(15-segment_set_intersection)
 
 if (NOT CMAKE_BUILD_TYPE)
     message(STATUS "No build type selected, default to Release")
@@ -15,12 +15,14 @@ find_package(Boost REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
 include_directories("../lib")
 
+file(GLOB AdditionaSources
+    "../lib/geometry/segment_intersections/*.h"
+    "../lib/geometry/segments_intersection.h")
+
 link_libraries(gmp)
 
-add_library(Geometry
-    "../lib/geometry/geometry.cpp"
-    "../lib/geometry/voronoi_diagram/voronoi_diagram.cpp")
+add_library(Geometry "../lib/geometry/geometry.cpp")
 
-add_executable(delaunay_triangulation main.cpp)
+add_executable(segment_set_intersection main.cpp ${AdditionaSources})
 
-target_link_libraries(delaunay_triangulation Geometry)
+target_link_libraries(segment_set_intersection Geometry)

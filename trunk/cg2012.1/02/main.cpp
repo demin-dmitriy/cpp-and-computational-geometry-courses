@@ -1,10 +1,10 @@
-#include "geometry.h"
-
 #include <cmath>
 
 #include <algorithm>
 #include <iostream>
 #include <iterator>
+
+#include "geometry/rasterize.h"
 
 using namespace std;
 

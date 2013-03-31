@@ -18,8 +18,8 @@ def test(file):
     maxX = max(points, key=lambda x: x[0])[0]
     minY = min(points, key=lambda x: x[1])[1]
     maxY = max(points, key=lambda x: x[1])[1]
-    xRange = Display.Range(minX - 100, maxX + 100)
-    yRange = Display.Range(minY - 100, maxY + 100)
+    xRange = Display.Range(minX, maxX)
+    yRange = Display.Range(minY, maxY)
 
     d = Display(width, height, xRange, yRange)
     d.putPoints(points)
@@ -32,7 +32,6 @@ def test(file):
     d.run()
 
 if __name__ == "__main__":
-    test(".\\..\\01-build\\performance_tests\\002.in")
-    # for i in range(1, 48):
-        # print("test {}".format(i))
-        # test(".\\..\\01-build\\correctness_tests\\{}.in".format(str(i).zfill(3)))
+    for i in range(1, 48):
+        print("test {}".format(i))
+        test(".\\..\\01-build\\correctness_tests\\{}.in".format(str(i).zfill(3)))

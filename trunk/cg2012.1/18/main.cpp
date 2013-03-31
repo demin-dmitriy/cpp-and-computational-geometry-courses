@@ -1,4 +1,4 @@
-#include "geometry.h"
+#include "geometry/voronoi_diagram.h"
 
 #include <iostream>
 #include <iterator>
