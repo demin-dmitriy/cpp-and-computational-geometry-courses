@@ -1,5 +1,3 @@
-# Note: running checker for performance tests takes forever.
-
 from subprocess import call
 from time import perf_counter
 
@@ -25,27 +23,29 @@ def run_solution(solution, input_file, output_file):
     file_in.close()
     return t2 - t1
 
-def test(file):
+def test(file, check):
     t = run_solution(solution, file, tmp_file)
     print("    Solution completed in {}.".format(t))
-    t1 = perf_counter()
-    res = call([checker, file, tmp_file])
-    t2 = perf_counter()
-    print("    Checker completed in {}.".format(t2 - t1))
-    if res == 0:
-        print("    Correct.")
-    else:
-        print("    Wrong answer.")
+    if check:
+        t1 = perf_counter()
+        res = call([checker, file, tmp_file])
+        t2 = perf_counter()
+        print("    Checker completed in {}.".format(t2 - t1))
+        if res == 0:
+            print("    Correct.")
+        else:
+            print("    Wrong answer.")
 
 def run_all_tests():
     print("Correctness tests:")
     for i in range(1, 21):
         print("test {}:".format(i))
-        test("correctness_tests\\{}.in".format(str(i).zfill(3)))
+        test("correctness_tests\\{}.in".format(str(i).zfill(3)), True)
     print("Performance tests:")
     for i in range(1, 3):
         print("test {}:".format(i))
-        test("performance_tests\\{}.in".format(str(i).zfill(3)))
+        # Note: running checker for performance tests takes forever.
+        test("performance_tests\\{}.in".format(str(i).zfill(3)), False)
  
 if __name__ == "__main__":
     if len(argv) >= 2:
@@ -56,7 +56,7 @@ if __name__ == "__main__":
             if argv[1] == "p":
                 prefix = "performance_tests"
             num = int(argv[2])
-        test("{}\\{}.in".format(prefix, str(num).zfill(3)))
+        test("{}\\{}.in".format(prefix, str(num).zfill(3)), True)
     else:
         run_all_tests()
     

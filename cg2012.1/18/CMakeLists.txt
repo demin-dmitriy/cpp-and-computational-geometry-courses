@@ -17,7 +17,9 @@ include_directories("../lib")
 
 link_libraries(gmp)
 
-add_library(Geometry "../lib/geometry.cpp" "../lib/voronoi_diagram/voronoi_diagram.cpp" "../lib/geometry_gmp.cpp")
+add_library(Geometry
+    "../lib/geometry/geometry.cpp"
+    "../lib/geometry/voronoi_diagram/voronoi_diagram.cpp")
 
 add_executable(voronoi_diagram main.cpp)
 

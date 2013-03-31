@@ -1,4 +1,4 @@
-#include "geometry.h"
+#include "geometry/diameter.h"
 
 #include <iostream>
 #include <vector>
@@ -23,6 +23,5 @@ int run(istream& in, ostream& out)
 
 int main()
 {
-
     return run(cin, cout);
 }

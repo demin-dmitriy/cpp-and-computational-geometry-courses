@@ -83,6 +83,7 @@ class Display:
             cord_list.append(p[1])
         self.canvas.create_polygon(*cord_list, outline=rgb2hex(color), fill='')
     
+    # More correct would be "putSegment" but I'm lazy to fix that
     def putLine(self, a, b, color=(0, 200, 100)):
         a = self.relative2absolute(*a)
         b = self.relative2absolute(*b)
