@@ -29,6 +29,7 @@ circle_t make_disk_out_of(ForwardIterator it, int const n = 0)
 }
 
 // todo: Consider on rewriting.
+// Bounded minimium disc.
 template<typename ForwardIterator>
 circle_t b_mindisk(ForwardIterator first, ForwardIterator last, int const n = 0)
 {

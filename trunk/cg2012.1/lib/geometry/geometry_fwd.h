@@ -198,7 +198,8 @@ circle_t b_mindisk(ForwardIterator first, ForwardIterator last, int n = 0);
 struct voronoi_diagram;
 
 /*
- * ...
+ * For given set of segments in range [first; last) finds all intersections and
+ * puts them in a range beggining at out.
  *
  * Bentley–Ottmann algorithm implemented.
  *
