@@ -7,17 +7,18 @@
 #include <boost/iterator/transform_iterator.hpp>
 #include <boost/iterator/indirect_iterator.hpp>
 
+#include "geometry_fwd.h"
 #include "geometry/segment_intersections/structures.h"
 #include "segment_intersections/segment_to_event_compare.h"
 
-// temp
-#include <iostream>
 namespace geometry
 {
 
 namespace detail
 {
 
+// Here will be stored all segments that will latter be in status tree (which is
+// internally is boost::intrusive::set)
 struct segment_store_t
 {
     struct get_ptr
@@ -53,11 +54,6 @@ struct segment_store_t
         return segments_store.end();
     }
 
-    ordered_segment_t front()
-    {
-        return segments_store.front();
-    }
-
     segment_t const* get(ordered_segment_t& segment)
     {
         return segments_source[std::distance(&segments_store[0], &segment)];
@@ -65,7 +61,6 @@ struct segment_store_t
 
     segments_source_t segments_source;
     segments_store_t segments_store;
-
 };
 
 inline bool will_intersect(
@@ -76,16 +71,80 @@ inline bool will_intersect(
             && intersecting == intersect(a.l, a.r, b.l, b.r);
 }
 
-inline void check_for_intersection(segments_status_t::iterator it,
+inline void check_for_new_event(segments_status_t::iterator it,
                             segments_event_queue_t& events)
 {
-    auto const& upper_segment = *(it--);
-    auto const& lower_segment = *it;
+    auto const& upper_segment = *it;
+    auto const& lower_segment = *--it;
     if (will_intersect(lower_segment, upper_segment))
     {
         events[intersection_descriptor_t(&upper_segment, &lower_segment)];
     }
 }
+
+// At event point we have some segments that cross event point and some segments
+// that start at this event point. Segments that cross the event point will
+// reverse their order and segments that start at this point will be somewhere
+// in between of first ones. We trying for one pass reverse order of first ones
+// and merge in the second ones.
+template<typename Iterator1, typename Iterator2>
+Iterator1 reverse_segments_and_add_new(
+        segments_status_t& status,
+        Iterator1 to_reverse_begin, Iterator1 to_reverse_end,
+        Iterator2 to_add_begin, Iterator2 to_add_end)
+{
+    auto prev_end = to_reverse_end;
+    // Adds new segment in status tree.
+    auto start_new_segment = [&]()
+    {
+        to_reverse_end = status.insert_before(to_reverse_end, *to_add_begin);
+        ++to_add_begin;
+    };
+
+    // Takes segment from bottom and puts it on top.
+    auto flip_segment = [&]()
+    {
+        auto& segment_ref = *to_reverse_begin;
+        to_reverse_begin = status.erase(to_reverse_begin);
+        prev_end = to_reverse_end;
+        to_reverse_end = status.insert_before(to_reverse_end, segment_ref);
+    };
+
+    while (to_reverse_begin != prev_end && to_add_begin != to_add_end)
+    {
+        // Sort segments by angle.
+        if (left == turn(to_add_begin->l,
+                         to_add_begin->r,
+                         to_reverse_begin->l,
+                         to_reverse_begin->r))
+        {
+            start_new_segment();
+        }
+        else
+        {
+            flip_segment();
+        }
+    }
+    while (to_add_begin != to_add_end)
+    {
+        start_new_segment();
+    }
+    while (to_reverse_begin != prev_end)
+    {
+        flip_segment();
+    }
+    // Return iterator to the most bottom segment.
+    return to_reverse_end;
+}
+
+struct turn_comparator_t
+{
+    bool operator()(detail::ordered_segment_t const* a,
+                    detail::ordered_segment_t const* b) const
+    {
+        return left == turn(a->l, a->r, b->l, b->r);
+    }
+};
 
 } // end of namespace detail
 
@@ -104,7 +163,6 @@ OutputIterator find_intersections(ForwardIterator first,
     }
 
     segments_status_t status;
-    int n = 0;
     for (auto event = event_queue.begin(), end = event_queue.end();
          event != end;
          event = event_queue.erase(event))
@@ -112,36 +170,35 @@ OutputIterator find_intersections(ForwardIterator first,
         auto& event_point = event->first;
         auto& left_endpoints = event->second.left_endpoints;
 
-        intersection_t intersection;
-        for (auto& segment: left_endpoints)
-        {
-            intersection.segments.push_back(segments.get(*segment));
-        }
-
-        // --Separate--
+        // Select all segments that end or cross the event point
         auto range = status.equal_range(event->first,
                                         detail::segment_to_event_compare_t());
 
-        if (event_point.which() == 0) //todo: refractor
-        {
-            ++n;
-            if (n % 4000 == 0)
-            {
-                std::cerr << n << '\n';
-            }
+        intersection_t intersection;
 
+        // If this is point event (not intersection one), than there might
+        // be segments that end there. So remove them and add to intersection.
+        if (event_point.which() == detail::point_event)
+        {
             point_t p = boost::get<point_t>(event->first);
-            while (range.first != range.second && range.first->r == p)
+            auto remove_segment = [&](decltype(range.first)& it)
             {
-                intersection.segments.push_back(segments.get(*range.first));
-                range.first = status.erase(range.first);
+                intersection.segments.push_back(segments.get(*it));
+                it = status.erase(it);
+            };
+
+            // Move range lower bound while removing segments from status tree.
+            while (range.first != range.second
+                   && range.first->r == p)
+            {
+                remove_segment(range.first);
             }
+            // Remove all other segments.
             for (auto segment = range.first; segment != range.second;)
             {
-                if (segment->r == p) // Then segment disappears after this event
+                if (segment->r == p)
                 {
-                    intersection.segments.push_back(segments.get(*segment));
-                    segment = status.erase(segment);
+                    remove_segment(segment);
                 }
                 else
                 {
@@ -150,70 +207,52 @@ OutputIterator find_intersections(ForwardIterator first,
             }
         }
 
-        auto& first = range.first;
-        auto last = range.second;
-        // dereference iterator?
-        auto left_endpoint = left_endpoints.begin();
-        auto left_endpoints_end = left_endpoints.end();
-        while (first != last && left_endpoint != left_endpoints_end)
+        // Add segments to intersection
+        for (auto& segment: left_endpoints)
         {
-            while (left == turn((*left_endpoint)->l, (*left_endpoint)->r,
-                                first->l, first->r))
-            {
-                last = status.insert_before(last, **left_endpoint);
-                ++left_endpoint;
-            }
-            auto& segment_ref = *first;
-            intersection.segments.push_back(segments.get(segment_ref));
-            first = status.erase(first);
-            last = status.insert_before(last, segment_ref);
+            intersection.segments.push_back(segments.get(*segment));
         }
-
-        if (first != last)
+        for (auto segment = range.first; segment!= range.second; ++segment)
         {
-            decltype(last) after_last;
-            do
-            {
-                auto& segment_ref = *first;
-                intersection.segments.push_back(segments.get(segment_ref));
-                first = status.erase(first);
-                after_last = last;
-                last = status.insert_before(last, segment_ref);
-            }
-            while (first != after_last);
+            intersection.segments.push_back(segments.get(*segment));
         }
-        else
-        {
-            while (left_endpoint != left_endpoints_end)
-            {
-                last = status.insert_before(last, **left_endpoint);
-                ++left_endpoint;
-            }
-        }
-        // -----------
-
-
         if (intersection.segments.size() > 1)
         {
             out++ = intersection;
         }
         assert(event_point.which() == 0 || intersection.segments.size() > 1);
-        if (range.second == last)
+
+        std::sort(left_endpoints.begin(),
+                  left_endpoints.end(),
+                  detail::turn_comparator_t());
+
+        // Reorder crossing segments and add new ones.
+        auto lowest = reverse_segments_and_add_new(
+                    status,
+                    range.first,
+                    range.second,
+                    boost::make_indirect_iterator(left_endpoints.begin()),
+                    boost::make_indirect_iterator(left_endpoints.end()));
+
+        auto highest = range.second;
+
+        // Check for new intersections of segments that just became adjacent.
+        if (lowest == highest)
         {
-            if (last != status.begin() && last != status.end())
+            if (lowest != status.begin() && lowest != status.end())
             {
-                check_for_intersection(last, event_queue);
+                check_for_new_event(lowest, event_queue);
             }
         }
         else
         {
-            if (last != status.begin())
+            if (lowest != status.begin())
             {
-                check_for_intersection(last, event_queue);
+                check_for_new_event(lowest, event_queue);
             }
-            if (range.second != status.end())
+            if (highest != status.end())
             {
-                check_for_intersection(range.second, event_queue);
+                check_for_new_event(highest, event_queue);
             }
         }
     }

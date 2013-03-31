@@ -30,7 +30,6 @@ int run(std::istream& in, std::ostream& out)
         }
         out << '\n';
     }
-
     return 0;
 }
 

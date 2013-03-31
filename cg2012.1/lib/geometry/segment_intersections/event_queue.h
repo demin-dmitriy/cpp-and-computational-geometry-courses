@@ -18,6 +18,13 @@ namespace detail
 
 typedef boost::variant<point_t, intersection_descriptor_t> event_point_t;
 
+// Corresponds to what event_point_t::which() returns.
+enum event_point_type_t
+{
+    point_event = 0,
+    intersection_event = 1
+};
+
 // Comparator for points defined as events (either usual point_t or point of
 // intersection of two segments.
 struct event_point_comparator_t : public boost::static_visitor<bool>

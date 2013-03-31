@@ -49,7 +49,7 @@ inline void two_sum(double const a, double const b, double& x, double& y)
 }
 
 template<int M>
-inline void grow_expansion(
+void grow_expansion(
         double const e[M], double const b, double h[M + 1])
 {
     double q = b;
@@ -67,7 +67,7 @@ inline void grow_expansion(
  * However it needs to be tested.
  */
 template <int M, int N>
-inline void expansion_sum(double e[N + M], double const f[N])
+void expansion_sum(double e[N + M], double const f[N])
 {
     for (int i = 0; i < N; ++i)
     {
@@ -76,7 +76,7 @@ inline void expansion_sum(double e[N + M], double const f[N])
 }
 
 template<size_t s>
-inline void split(double const a, double& a_hi, double& a_lo)
+void split(double const a, double& a_hi, double& a_lo)
 {
     static_assert(
         std::numeric_limits<double>::digits / 2 <= s
@@ -103,7 +103,7 @@ inline void two_product(
 }
 
 template<size_t N>
-inline int sign(double const expansion[N])
+int sign(double const expansion[N])
 {
     for (int i = N - 1; i >= 0; --i)
     {
@@ -120,7 +120,7 @@ inline int sign(double const expansion[N])
 }
 
 template<size_t M>
-inline void scale_expansion(double e[M], double b, double h[2 * M])
+void scale_expansion(double e[M], double b, double h[2 * M])
 {
     double Q;
     two_product(e[0], b, Q, h[0]);
