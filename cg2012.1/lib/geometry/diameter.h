@@ -10,7 +10,6 @@
 namespace geometry
 {
 
-// todo: rewrite
 template<typename BidirectionalIterator>
 std::pair<point_t, point_t> diameter(
         BidirectionalIterator first,
@@ -23,12 +22,14 @@ std::pair<point_t, point_t> diameter(
         return std::make_pair(candidates.front(), candidates.back());
     }
 
-    auto p = --candidates.end();
+    // Invariant: p_next == std::next(p) (except for the first time)
+    auto p = std::prev(candidates.end());
     auto p_next = candidates.begin();
+    // Invariant: q_next == std::next(q)
     auto q = p_next;
-    auto q_next = q;
-    ++q_next;
+    auto q_next = std::next(q);
     auto end = candidates.end();
+
     while (q_next != end
            && closer == compare_distance_to_line(*p, *p_next, *q, *q_next))
     {
@@ -36,17 +37,24 @@ std::pair<point_t, point_t> diameter(
         ++q_next;
     }
 
+    // p_max, q_max -- current most farthest points.
     auto p_max = p_next;
     auto q_max = p_next;
-    while (true)
+
+    auto update_maximum = [&]()
     {
-        p = p_next;
-        ++p_next;
-        if (compare_distance(*p_max, *q_max, *p, *q) < 0)
+        if (closer == compare_distance(*p_max, *q_max, *p, *q))
         {
             p_max = p;
             q_max = q;
         }
+    };
+
+    while (true)
+    {
+        p = p_next;
+        ++p_next;
+        update_maximum();
         if (q_next == end)
         {
             return std::make_pair(*p_max, *q_max);
@@ -55,11 +63,7 @@ std::pair<point_t, point_t> diameter(
         {
             q = q_next;
             ++q_next;
-            if (compare_distance(*p_max, *q_max, *p, *q) < 0)
-            {
-                p_max = p;
-                q_max = q;
-            }
+            update_maximum();
             if (q_next == end)
             {
                 break;
