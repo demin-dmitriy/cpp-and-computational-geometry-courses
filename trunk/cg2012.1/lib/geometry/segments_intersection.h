@@ -3,13 +3,15 @@
 
 #include <algorithm>
 #include <vector>
-#include <cmath>
 
 #include <boost/iterator/transform_iterator.hpp>
 #include <boost/iterator/indirect_iterator.hpp>
 
 #include "geometry/segment_intersections/structures.h"
+#include "segment_intersections/segment_to_event_compare.h"
 
+// temp
+#include <iostream>
 namespace geometry
 {
 
@@ -66,12 +68,20 @@ struct segment_store_t
 
 };
 
+inline bool will_intersect(
+        ordered_segment_t const& a, ordered_segment_t const& b)
+{
+    // if turn(...) == left then segments are diverge.
+    return right == turn (a.l, a.r, b.l, b.r)
+            && intersecting == intersect(a.l, a.r, b.l, b.r);
+}
+
 inline void check_for_intersection(segments_status_t::iterator it,
                             segments_event_queue_t& events)
 {
     auto const& upper_segment = *(it--);
     auto const& lower_segment = *it;
-    if (detail::interior_intersect(lower_segment, upper_segment))
+    if (will_intersect(lower_segment, upper_segment))
     {
         events[intersection_descriptor_t(&upper_segment, &lower_segment)];
     }
@@ -94,7 +104,7 @@ OutputIterator find_intersections(ForwardIterator first,
     }
 
     segments_status_t status;
-
+    int n = 0;
     for (auto event = event_queue.begin(), end = event_queue.end();
          event != end;
          event = event_queue.erase(event))
@@ -110,10 +120,16 @@ OutputIterator find_intersections(ForwardIterator first,
 
         // --Separate--
         auto range = status.equal_range(event->first,
-                                        detail::segment_status_compare_t());
+                                        detail::segment_to_event_compare_t());
 
         if (event_point.which() == 0) //todo: refractor
         {
+            ++n;
+            if (n % 4000 == 0)
+            {
+                std::cerr << n << '\n';
+            }
+
             point_t p = boost::get<point_t>(event->first);
             while (range.first != range.second && range.first->r == p)
             {
@@ -181,7 +197,7 @@ OutputIterator find_intersections(ForwardIterator first,
         {
             out++ = intersection;
         }
-
+        assert(event_point.which() == 0 || intersection.segments.size() > 1);
         if (range.second == last)
         {
             if (last != status.begin() && last != status.end())
@@ -201,7 +217,7 @@ OutputIterator find_intersections(ForwardIterator first,
             }
         }
     }
-
+    assert(event_queue.empty());
     return out;
 }
 
