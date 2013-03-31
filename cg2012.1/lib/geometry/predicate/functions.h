@@ -8,8 +8,6 @@
 #ifndef GEOMETRY_PREDICATE_FUNCTIONS_H
 #define GEOMETRY_PREDICATE_FUNCTIONS_H
 
-#include "geometry/predicate.h"
-
 namespace geometry
 {
 

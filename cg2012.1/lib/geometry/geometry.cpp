@@ -19,6 +19,8 @@ namespace predicate
 // turn predicate
 static auto turn_expression = []()
 {
+    // Actually macroses could help a lot with these bulky definitions but they
+    // are taboo.
     variable_t<0> a1x;
     variable_t<1> a1y;
     variable_t<2> a2x;
