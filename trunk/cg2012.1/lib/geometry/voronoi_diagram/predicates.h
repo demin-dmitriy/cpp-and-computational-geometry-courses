@@ -41,7 +41,7 @@ struct step_t<midpoint_expression_t, custom_step_t>
     }
 };
 
-static auto midres_expression = []()
+static auto a_keyy_plus_b_expression= []()
 {
     using namespace geometry::predicate;
     variable_t<0> lx;
@@ -55,10 +55,10 @@ static auto midres_expression = []()
     return a * key_y + b;
 };
 
-typedef decltype(midres_expression()) midres_expression_t;
+typedef decltype(a_keyy_plus_b_expression()) a_keyy_plus_b_expression_t;
 
 template<>
-struct step_t<midres_expression_t, custom_step_t>
+struct step_t<a_keyy_plus_b_expression_t, custom_step_t>
 {
     template<typename Info>
     static predicate_result_t eval(Info& info)

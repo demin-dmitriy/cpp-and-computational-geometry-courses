@@ -72,9 +72,8 @@ struct voronoi_diagram_construction
         event_handler_t event_handler(this);
         for (auto end = events.end(); event != end; event = events.erase(event))
         {
-            // todo: Check there is no performance loss. (There shouldn't be)
-            using namespace std::placeholders;
             boost::apply_visitor(event_handler, *event);
+
             // multiset is guaranteed to keep stable sorting order since c++11
             // standart. Therefore events with same as current event
             // x-coordingate will be inserted after it.
@@ -116,8 +115,8 @@ struct voronoi_diagram_construction
         auto right_site = right.site;
         auto middle_site = middle.site;
         auto left_site = left.site;
-        // todo: counter-clockwise?
-        // If nodes are ordered clockwise then their bisectors will converge.
+        // If nodes are ordered counter-clockwise then their bisectors will
+        // converge.
         if (geometry::left == turn(*right_site, *middle_site, *left_site))
         {
             auto event = events.insert(circle_event_t(
@@ -150,6 +149,7 @@ struct voronoi_diagram_construction
     // Handle site event.
     void handle_event(site_t const& event)
     {
+        // Find the first node 'higher' than event point.
         auto end_node = nodes.upper_bound(event, site_to_node_comp());
         auto left_node = std::prev(end_node);
         clear_event(*left_node);
@@ -165,7 +165,6 @@ struct voronoi_diagram_construction
         }
         if (left_node != nodes.begin())
         {
-            // todo: choose between node_to_left and std::prev
             check_for_circle_event(*left_node->node_to_left,
                                    *left_node,
                                    *middle_node);

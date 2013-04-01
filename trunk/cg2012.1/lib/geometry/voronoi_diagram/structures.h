@@ -13,7 +13,6 @@
 #include <set>
 
 #include "geometry/workaround/boost_intrusive_set.hpp"
-#include <boost/container/set.hpp>
 #include <boost/variant.hpp>
 #include <boost/numeric/interval.hpp>
 #include <boost/math/special_functions.hpp>
@@ -183,7 +182,7 @@ struct circle_event_t
     mutable vertex_parameter_cache<mpq_class> gmp_cache;
 };
 
-// TODO : Разбить на два класса при рефракторинге
+// Compares x-coordinates of two events.
 struct event_comparator : public boost::static_visitor<bool>
 {
     bool operator() (event_t const& a, event_t const& b) const
@@ -205,6 +204,7 @@ struct event_comparator : public boost::static_visitor<bool>
         mpq_class& a = v.gmp_cache.a;
         mpq_class& bx = v.gmp_cache.b;
         mpq_class& d = v.gmp_cache.d;
+        // Goal is to compare: s.x and (-bx + sqrt(d)) / (2 * a)
         mpq_class t = 2 * a * s.x + bx;
         if (sgn(t) < 0)
         {
@@ -233,7 +233,8 @@ struct event_comparator : public boost::static_visitor<bool>
         {
             return false;
         }
-        // todo: пояснить вычисления?
+        // Goal is to compare:
+        // (-bx1 + sqrt(d1)) / (2 * a1) and (-bx2 + sqrt(d2)) / (2 * a2)
         a.init_parameters();
         mpq_class& a1 = a.gmp_cache.a;
         mpq_class& bx1 = a.gmp_cache.b;
@@ -242,6 +243,8 @@ struct event_comparator : public boost::static_visitor<bool>
         mpq_class& a2 = b.gmp_cache.a;
         mpq_class& bx2 = b.gmp_cache.b;
         mpq_class& d2 = b.gmp_cache.d;
+        // Compare (a1 and a2 guaranted to be positive):
+        // a1 * bx2 - a2 * bx1 and a1 * sqrt(d2) - a2 * sqrt(d1)
         mpq_class a1b2_m_a2b1 = a1 * bx2 - a2 * bx1;
         mpq_class a1a1d2 = a1 * a1 * d2;
         mpq_class a2a2d1 = a2 * a2 * d1;
@@ -252,8 +255,13 @@ struct event_comparator : public boost::static_visitor<bool>
             return sign_left < sign_right;
         }
         // Here we have sign_left == sign_right & sign_left != 0
+        // Compare:
+        // 2*a1*a2*sqrt(d1*d2) and
+        // (a1*sqrt(d2))^2 + (a2*sqrt(d1))^2 - (a1*bx2-a2*bx1)^2
+        // Don't forget to check sign_left.
         mpq_class t1 = a1a1d2 + a2a2d1 - a1b2_m_a2b1 * a1b2_m_a2b1;
         int sgn_t1 = sgn(t1);
+        // Left side is positive.
         if (sgn_t1 < 0)
         {
             return sign_left == -1;
@@ -282,6 +290,7 @@ struct event_comparator : public boost::static_visitor<bool>
 struct node_t : public boost::intrusive::set_base_hook<>
 {
     site_t const* site;
+    // todo: change name
     node_t* node_to_left;
     boost::optional<event_queue_t::iterator> event;
     half_edge_t* half_edge;
@@ -293,7 +302,9 @@ struct node_t : public boost::intrusive::set_base_hook<>
     {}
 };
 
-
+// Compares y-coordinate of node and y-coordinate of some point (site).
+// Note: y-coordinate of node also depends on point's x-coordinate (as sweep
+// line moves parabola intersections also move.
 struct site_to_node_comp
 {
     bool operator()(site_t const& key, node_t const& node) const
@@ -305,7 +316,7 @@ struct site_to_node_comp
         return compare(key, *node.node_to_left->site, *node.site);
     }
 
-    int midpoint_compare(
+    predicate::predicate_result_t midpoint_compare(
             site_t const& key, site_t const& l, site_t const& r) const
     {
         using namespace geometry::predicate;
@@ -313,20 +324,17 @@ struct site_to_node_comp
         return p(l.y, r.y, key.y);
     }
 
-    // todo: Плохое имя
-    bool mid_res_compare(
+    int a_keyy_plus_b_compare(
             site_t const& key, site_t const& l, site_t const& r) const
     {
         using namespace geometry::predicate;
-        predicate_t<midres_expression_t,
+        predicate_t<a_keyy_plus_b_expression_t,
                 double_step_t,
                 interval_step_t,
                 custom_step_t> p;
-        return negative == p(l.x, l.y, r.x, r.y, key.x, key.y);
+        return p(l.x, l.y, r.x, r.y, key.x, key.y);
     }
 
-    // todo: Плохое имя
-    // todo: Пояснить вычисления
     bool res(site_t const& key, site_t const& l, site_t const& r) const
     {
         using namespace geometry::predicate;
@@ -342,6 +350,7 @@ struct site_to_node_comp
                     - (sqr(ly) + sqr(lx) - sqr(key_x)) * (rx - key_x);
             auto a = lx - rx;
             auto b = (ly * (rx - key_x) - ry * (lx - key_x));
+            // Sign of 'a' doesn't matter here
             return c + key_y * (a * key_y + constant_t<2>() * b);
         };
         typedef decltype(res_expression()) res_expression_t;
@@ -351,7 +360,22 @@ struct site_to_node_comp
 
     bool compare(site_t const& key, site_t const& l, site_t const& r) const
     {
+        // If parabola defined by point s = (s.x, s.y) and line x = lx (as
+        // set of equidistant points from point and line) then parabola is given
+        // by equation:
+        // x = 1 / (2*(s.x - lx)) * (y^2 - 2*s.y*y + (s.x)^2 + (s.y)^2 - (lx)^2)
+        // Node is a point of intersection on the right of two parabolas
+        // where first one is defined by point s = l and line x = key.x and
+        // second one is defined by point s = r and the same line x = key.x .
+        // Solve equation a*y^2 + 2*b*y + c = 0 where
+        // a = l.x - r.x
+        // b = - r.y * (l.x - key.x) + l.y * (r.x - key.x)
+        // c = ((r.y)^2 + (r.x)^2 - (key.x)^2) * (l.x - key.x)
+        //   - ((l.y)^2 + (l.x)^2 - (key.x)^2) * (r.x - key.x)
+        // in general case we have that y-coordinate of node is:
+        // y = (-b + sqrt(b^2 - ac)) / a
         assert(!(l.x == key.x && r.x == key.x));
+        // This is degenerate cases where one of parabolas is a ray.
         if (l.x == key.x)
         {
             return key.y < l.y;
@@ -360,14 +384,23 @@ struct site_to_node_comp
         {
             return key.y < r.y;
         }
+        // In this case a = 0 so we have linnear equation 2*b*y + c = 0 <=>
+        // y = (l.y + r.y) / 2
         if (l.x == r.x)
         {
-            return 1 == midpoint_compare(key, l, r);
+            return predicate::positive == midpoint_compare(key, l, r);
         }
-        if (mid_res_compare(key, l, r))
+
+        // In general case: goal is to compare key.y and (-b+sqrt(b^2-a*c))/a
+        // a * key.y + b and sqrt(b^2 - a*c) if a > 0
+        // sqrt(b^2 - a*c) and a * key.y + b if a < 0
+        // If a * key.y + b < 0:
+        if (predicate::negative == a_keyy_plus_b_compare(key, l, r))
         {
             return l.x > r.x;
         }
+        // Does the rest: compares (a*key.y + b)^2 and (b^2 - a*c)
+        // (and takes into account sign of a).
         return res(key, l, r);
     }
 

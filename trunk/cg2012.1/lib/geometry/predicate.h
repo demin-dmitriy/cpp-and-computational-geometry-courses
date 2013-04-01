@@ -1,7 +1,41 @@
 /*
  * A module for automatizating predicate creation process.
  *
- * example?
+ * There still a lot of room for improvement.
+ */
+
+/*
+ * Example of predicate orientation2d:
+ *
+ * int orient2d(point_t a1, point_t a2, point_t b) {
+ * // Take advantage of lambda's ability deduce it's return type.
+ * auto expression = []()
+ * {
+ *     // This code can't actually execute (it won't compile if you try to call
+ *     // this lambda function) but all types can be deduced.
+ *
+ *     // variable_t<n> is abstract number.
+ *     // n is the number of argument in function call.
+ *     variable_t<0> a1x;
+ *     variable_t<1> a1y;
+ *     variable_t<2> a2x;
+ *     variable_t<3> a2y;
+ *     variable_t<4> bx;
+ *     variable_t<5> by;
+ *     // For variable_t operators + - * / declared, but actually not defined
+ *     // (the body is not defined). Operators construct expression tree
+ *     // so that you don't have to manipulate with templates directly.
+ *     return (bx - a1x) * (a2y - a1y) - (a2x - a1x) * (by - a1y);
+ * };
+ *
+ * // Note: without decltype you'll have no way but to write something monstrous
+ * // like:
+ * // typedef sub_t<mul_t<sub_t<variable_t<4>, variable_t<0>>, ... ;
+ * typedef decltype(expression()) expr_t;
+ * predicate_t<expr_t, double_step_t, interval_step_t, gmp_step_t> p;
+ *
+ * return p(a1.x, a1.y, a2.x, a2.y, b.x, b.y);
+ * }
  *
  */
 
