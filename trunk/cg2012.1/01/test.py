@@ -2,6 +2,7 @@ from subprocess import call
 from time import perf_counter
 
 from os import chdir
+
 chdir("..\\01-build")
 
 solution = "convex_hull.exe"
@@ -31,7 +32,11 @@ def test(file):
         print("    Wrong answer.")
 
 if __name__ == "__main__":
-    print("Correctness tests:")
+    print("My tests:")
+    for i in range(78):
+        print("test {}:".format(i))
+        test("..\\testgen-build\\tests\\{}.in".format(i))
+    print("Correctness tests:")    
     for i in range(48):
         print("test {}:".format(i))
         test("correctness_tests\\{}.in".format(str(i).zfill(3)))

@@ -37,6 +37,10 @@ def test(file):
         print("    Wrong answer.")
 
 def run_all_tests():
+    print("My tests:")
+    for i in range(78):
+        print("test {}:".format(i))
+        test("..\\testgen-build\\tests-unique-points\\{}.in".format(i))
     print("Correctness tests (0):")
     for i in range(5):
         print("test {}:".format(i))

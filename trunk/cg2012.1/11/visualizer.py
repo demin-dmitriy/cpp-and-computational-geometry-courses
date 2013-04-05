@@ -43,8 +43,10 @@ def test(file):
     d.run()
 
 if __name__ == "__main__":
-    # test(".\\..\\11-build\\correctness_tests\\06.in")
-    # test(".\\..\\11-build\\correctness_tests\\14.in")
+    print("My tests:")
+    for i in range(1, 78):
+        print("test {}:".format(i))
+        test("..\\testgen-build\\tests\\{}.in".format(i))
     for i in range(1, 21):
         print("test {}".format(i))
         test(".\\..\\11-build\\correctness_tests\\{}.in".format(str(i).zfill(2)))

@@ -68,7 +68,6 @@ Interval my_sqrt(Interval const& i)
                             nexttoward(sqrt(i.upper()), DBL_MAX));
 }
 
-// todo: possibly refractor to highlight determinant.
 template<typename Type>
 void calculate_vertex_parameters(
         pre_vertex_t const& vertex,
@@ -290,14 +289,13 @@ struct event_comparator : public boost::static_visitor<bool>
 struct node_t : public boost::intrusive::set_base_hook<>
 {
     site_t const* site;
-    // todo: change name
-    node_t* node_to_left;
+    node_t* node_below;
     boost::optional<event_queue_t::iterator> event;
     half_edge_t* half_edge;
 
-    node_t(site_t const& site, node_t* node_to_left = nullptr)
+    node_t(site_t const& site, node_t* node_below = nullptr)
         : site(&site)
-        , node_to_left(node_to_left)
+        , node_below(node_below)
         , half_edge(nullptr)
     {}
 };
@@ -309,11 +307,11 @@ struct site_to_node_comp
 {
     bool operator()(site_t const& key, node_t const& node) const
     {
-        if (node.node_to_left == nullptr) // Then it is the leftmost arc.
+        if (node.node_below == nullptr) // Then it is the leftmost arc.
         {
             return false;
         }
-        return compare(key, *node.node_to_left->site, *node.site);
+        return compare(key, *node.node_below->site, *node.site);
     }
 
     predicate::predicate_result_t midpoint_compare(
