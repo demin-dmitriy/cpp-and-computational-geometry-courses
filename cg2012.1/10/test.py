@@ -31,6 +31,10 @@ def test(file):
         print("    Wrong answer.")
 
 if __name__ == "__main__":
+    print("My tests:")
+    for i in range(78):
+        print("test {}:".format(i))
+        test("..\\testgen-build\\tests\\{}.in".format(i))
     print("Custom tests:")
     for i in range(1, 7):
         print("test {}:".format(i))

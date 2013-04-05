@@ -19,9 +19,6 @@ struct point_base_t
         , y(o.y)
     {}
 
-    // todo: do we need this?
-    // point_base_t(point_base_t<T> const& o) = default;
-
     template<typename U, typename V>
     point_base_t(U const& x, V const& y)
         : x(x)

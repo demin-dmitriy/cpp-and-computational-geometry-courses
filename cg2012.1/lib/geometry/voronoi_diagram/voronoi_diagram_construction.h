@@ -56,7 +56,7 @@ struct voronoi_diagram_construction
         node_t* prev = nullptr;
         for (auto& node: node_store)
         {
-            node.node_to_left = prev;
+            node.node_below = prev;
             if (prev != nullptr)
             {
                 create_edge(node);
@@ -99,8 +99,8 @@ struct voronoi_diagram_construction
 
     void create_edge(node_t& node)
     {
-        assert(node.node_to_left);
-        node_t& left_node = *node.node_to_left;
+        assert(node.node_below);
+        node_t& left_node = *node.node_below;
         edges.push_back(half_edge_t(node.site));
         auto& edge = edges.back();
         node.half_edge = &edge;
@@ -141,7 +141,7 @@ struct voronoi_diagram_construction
         auto new_node = nodes.insert_before(node_it, node_store.back());
         if (node_it != nodes.end())
         {
-            node_it->node_to_left = &*new_node;
+            node_it->node_below = &*new_node;
         }
         return new_node;
     }
@@ -165,7 +165,7 @@ struct voronoi_diagram_construction
         }
         if (left_node != nodes.begin())
         {
-            check_for_circle_event(*left_node->node_to_left,
+            check_for_circle_event(*left_node->node_below,
                                    *left_node,
                                    *middle_node);
         }
@@ -189,7 +189,7 @@ struct voronoi_diagram_construction
         node->half_edge->target = &vertex;
 
         // Remove disappearing node.
-        right_node->node_to_left = &*left_node;
+        right_node->node_below = &*left_node;
         create_edge(*right_node);
         right_node->half_edge->twin->target = &vertex;
         nodes.erase(node);

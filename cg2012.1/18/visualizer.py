@@ -29,13 +29,16 @@ def test(file):
     vertices = []
     for p in points_desc:
         D = 2 * (points[p[0]][0] * (points[p[1]][1] - points[p[2]][1]) + points[p[1]][0] * (points[p[2]][1] - points[p[0]][1]) + points[p[2]][0] * (points[p[0]][1] - points[p[1]][1]))
+        if D == 0:
+            print("Double precision is not enough to find vertex coordinates")
+            return
         x = (norm(points[p[0]]) * (points[p[1]][1] - points[p[2]][1]) + norm(points[p[1]]) * (points[p[2]][1] - points[p[0]][1]) + norm(points[p[2]]) * (points[p[0]][1] - points[p[1]][1])) / D
         y = -(norm(points[p[0]]) * (points[p[1]][0] - points[p[2]][0]) + norm(points[p[1]]) * (points[p[2]][0] - points[p[0]][0]) + norm(points[p[2]]) * (points[p[0]][0] - points[p[1]][0])) / D
         vertices.append((x, y))
-    print(points)
-    print(vertices)
+    #print(points)
+    #print(vertices)
     if points:
-        union = points + vertices
+        union = points # + vertices
         minX = min(union, key=lambda x: x[0])[0]
         maxX = max(union, key=lambda x: x[0])[0]
         minY = min(union, key=lambda x: x[1])[1]
@@ -93,6 +96,10 @@ if __name__ == "__main__":
             num = int(argv[2])
         test("..\\18-build\\{}\\{}.in".format(prefix, str(num).zfill(3)))
     else:
+        print("My tests:")
+        for i in range(1, 78):
+            print("test {}:".format(i))
+            test("..\\testgen-build\\tests-unique-points\\{}.in".format(i))
         for i in range(4):
             print("test {}".format(i))
             test("..\\18-build\\correctness_tests_0\\{}.in".format(str(i).zfill(3)))

@@ -34,9 +34,6 @@ struct step_t<midpoint_expression_t, custom_step_t>
         double result[3] = {l_y, r_y, -2 * key_y};
         expansion_sum<1, 1>(result, result + 1);
         expansion_sum<2, 1>(result, result + 2);
-        // todo: too bad i haven't got any test that detects bugs there.
-#pragma message ("There is an intentional bug, but there is no test that could find it")
-        return positive;
         return static_cast<predicate_result_t>(sign<3>(result));
     }
 };

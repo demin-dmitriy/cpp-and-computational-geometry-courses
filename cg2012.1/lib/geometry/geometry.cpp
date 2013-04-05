@@ -94,7 +94,7 @@ struct step_t<in_circle_expression_t, custom_step_t>
         two_product(-zx, bx, result[4], result[5]);
         two_product(zx, zx, result[6], result[7]);
         two_product(ay, by, result[8], result[9]);
-        two_product(ay, -zx, result[10], result[11]);
+        two_product(ay, -zy, result[10], result[11]);
         two_product(-zy, by, result[12], result[13]);
         two_product(zy, zy, result[14], result[15]);
 

@@ -2,8 +2,8 @@
 
 from collections import OrderedDict
 
-input_dir = "performance_tests"
-output_dir = "cleaned_tests_2"
+input_dir = "..\\testgen-build\\tests"
+output_dir = "..\\testgen-build\\tests-unique-points"
 
 def tidy(in_file, out_file):
     lines = list(filter(None, in_file.read().split('\n')))
@@ -14,8 +14,8 @@ def tidy(in_file, out_file):
     return len(lines[1:]) != n
     
 if __name__ == "__main__":
-    for i in range(3):
-        name = "{}.in".format(str(i).zfill(3))
+    for i in range(78):
+        name = "{}.in".format(i)
         if tidy(open("{}\\{}".format(input_dir, name)),
                 open("{}\\{}".format(output_dir, name), 'w')):
             print(name)
